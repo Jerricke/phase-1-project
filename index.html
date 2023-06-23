@@ -9,19 +9,31 @@
 </head>
 
 <body>
-    <div class="play-area">
-        <div>1</div>
-        <div>2</div>
-        <div>3</div>
-        <div>4</div>
-        <div>5</div>
-        <div>1</div>
-        <div>2</div>
-        <div>3</div>
-        <div>4</div>
-        <div>5</div>
+    <header>
+        <h1>Pokemon Finder</h1>
+    </header>
+    <div id="wrapper">
+        <div class="play-area">
+            <!-- index.js will populate this with div tags and coordinates -->
+        </div>
     </div>
-    <script src="index.js""></script>
+    <footer class="information-display-section">
+        <div class="information-display">
+            <div id="pokemonDetail">
+                <p>Pokemon Name: </p>
+                <div id="displayName">Charmander</div>
+                <p>Pokemon Type: </p>
+                <div id="displayType">Fire</div>
+            </div>
+            <div id="pokemonImgBox">
+                <img id="displayImg"
+                    src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png"
+                    alt="pokemonImg" />
+            </div>
+        </div>
+
+    </footer>
+    <script defer src="index.js""></script>
 </body>
 
 </html>

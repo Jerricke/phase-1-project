@@ -1,7 +1,65 @@
 .play-area {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(5, 1fr);
+    grid-template-rows: repeat(3, 1fr);
     border: 2px solid black ;
+}
 
+.play-area > div {
+    /* background: green; */
+    text-align: center;
+    padding: 20%;
+    border: 2px dashed darkgreen;
+}
+
+#wrapper {
+    background-image: url(./grass_tile.png);
+    background-size: 30%;
+    /* background-repeat: no-repeat; */
+}
+
+/* .play-area > div:nth-child(odd){
+    background: rgb(48, 165, 48);
+} */
+
+#wrapper > div > div.currentPosition {
+    background-image: url("./poke_ash-removebg-preview.png");
+    /* background: black; */
+    background-repeat: no-repeat;
+    background-size: 100%;
+
+}
+
+/* bottom section */
+footer {
+    padding-top: 1em;
+}
+
+.information-display {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    border: 2px solid black ;
+}
+
+#pokemonDetail {
+    background: cyan;
+    padding: 1em;
+    padding-top: 0;
+}
+
+#pokemonDetail > div {
+    padding: 1em 2em;
+}
+
+#pokemonImgBox {
+    background-image: url("./Untitled\ design.png");
+    background-repeat: no-repeat;
+    background-size: 100% ;
+}
+
+#pokemonImgBox > img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
 }
