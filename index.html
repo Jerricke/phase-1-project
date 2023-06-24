@@ -4,36 +4,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.cdnfonts.com/css/pokemon-solid" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="style.css" />
+
     <title>Phase-1-Project</title>
 </head>
 
 <body>
-    <header>
-        <h1>Pokemon Finder</h1>
-    </header>
-    <div id="wrapper">
-        <div class="play-area">
-            <!-- index.js will populate this with div tags and coordinates -->
+    <div id="mainMenuScreen">
+        <div id="mainContainer">
+            <h1>Pokemon Catcher!</h1>
+            <button id="gameStart" type="button">Start</button>
         </div>
     </div>
-    <footer class="information-display-section">
-        <div class="information-display">
-            <div id="pokemonDetail">
-                <p>Pokemon Name: </p>
-                <div id="displayName">Charmander</div>
-                <p>Pokemon Type: </p>
-                <div id="displayType">Fire</div>
-            </div>
-            <div id="pokemonImgBox">
-                <img id="displayImg"
-                    src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png"
-                    alt="pokemonImg" />
+
+    <div id="mainScreen">
+        <div id="wrapper">
+            <div id="play-area">
+                <!-- index.js will populate this with div tags and coordinates -->
             </div>
         </div>
 
-    </footer>
-    <script defer src="index.js""></script>
+        <div id="consoleHUD">
+            <div id="eventLogger">
+                <div id="eventHistory">
+                    <!-- use index.js to populate the events  -->
+                </div>
+            </div>
+            <div class="consoleButtons">
+                <button id="bag" type="button">Bag</button>
+            </div>
+            <div class="consoleButtons">
+                <button id="main-menu" type="button">Main Menu</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="bagScreen">
+
+        <div id="bagGridBox">
+            <div id="itemDiv">
+                <h1>Item(s)</h1>
+                <ul id="itemList">
+                </ul>
+            </div>
+            <div id="pokemonDiv">
+                <h1>Captured Pokemon(s)</h1>
+                <ul id="pokemonList">
+                </ul>
+            </div>
+            <div>
+                <button id="returnToMain" type="button">Return</button>
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <div id="combatScreen">
+        <div class="combatContainer">
+            <div id="eventLoggerCombat">
+                <div id="combatHistory">
+                    <!-- use index.js to populate the events  -->
+                    <p>pokemon action</p>
+                    <p>pokemon action</p>
+                    <p>pokemon action</p>
+                    <p>pokemon action</p>
+                    <p>pokemon action</p>
+
+                </div>
+            </div>
+            <img id="opponentPokemon" src="#" alt="oppoPokemon">
+            <div id="opponentStats">
+                <p>HP: <span id="opponentHP">someHP</span></p>
+            </div>
+            <img id="allyPokemon" src="#" alt="allyPokemon">
+            <div id="allyStats">
+                <p>HP: <span id="allyHP">someHP</span></p>
+            </div>
+        </div>
+        <div id="combatNavBar">
+            <div id="movesNav">
+                <div id="movesList">
+                </div>
+            </div>
+            <button id="bagBtn" type="button">Bag</button>
+            <button id="escapeBtn" type="button">Escape</button>
+        </div>
+
+
+    </div>
+
+
+
+    <script src="index.js""></script>
 </body>
 
 </html>

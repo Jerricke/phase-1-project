@@ -1,0 +1,52 @@
+{
+    "pokemon" : [
+        {
+            "id" : 1 ,
+            "name": "charmander" ,
+            "type": "fire",
+            "health" : 24,
+            "front_sprite": "./charmander_front.png",
+            "back_sprite": "./charmander_back.png",
+            "moves" : [
+                {
+                    "name" : "fire-punch",
+                    "damage" : 5
+                },
+                {
+                    "name" : "scratch",
+                    "damage" : 5
+                },
+                {
+                    "name" : "ember",
+                    "damage" : 6
+                }
+            ]
+        },
+        {
+            "id" : 2 ,
+            "name": "pikachu" ,
+            "type": "lightning",
+            "health" : 24,
+            "front_sprite": "./pikachu_front.png",
+            "back_sprite": "./pikachu_back.png",
+            "moves" : [
+                {
+                    "name" : "thunder-punch",
+                    "damage" : 5
+                },
+                {
+                    "name" : "headbutt",
+                    "damage" : 4
+                },
+                {
+                    "name" : "thunderbolt",
+                    "damage" : 6
+                },
+                {
+                    "name" : "quick-attack",
+                    "damage" : 3
+                }
+            ]
+        }
+    ]
+}

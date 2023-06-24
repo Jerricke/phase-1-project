@@ -1,12 +1,50 @@
-.play-area {
+html, 
+body {
+    height: 100vh;
+    overflow: hidden;
+}
+
+* {
+    font-family: 'Pokemon Solid', sans-serif;
+    box-sizing: border-box;
+    letter-spacing: 0.3em;
+}
+
+/* mainMenuScreen Section */
+#mainContainer {
+    height: 100vh;
+    background-image: url("./pokemonMainMenu.webp");
+    background-size: 25%;
+    text-align: center;
+}
+
+#mainContainer > h1 {
+    padding-top: 20vh;
+    font-size: 3em;
+}
+
+#gameStart {
+    padding: 1em 1em;
+    font-size: 3em;
+    border-radius: 10%;
+}
+
+button {
+    background-color: lightskyblue;
+}
+button:hover {
+    background-color: lightcoral;
+}
+
+/* mainScreenSection */
+#play-area {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     grid-template-rows: repeat(3, 1fr);
     border: 2px solid black ;
 }
 
-.play-area > div {
-    /* background: green; */
+#play-area > div {
     text-align: center;
     padding: 20%;
     border: 2px dashed darkgreen;
@@ -15,31 +53,196 @@
 #wrapper {
     background-image: url(./grass_tile.png);
     background-size: 30%;
-    /* background-repeat: no-repeat; */
 }
-
-/* .play-area > div:nth-child(odd){
-    background: rgb(48, 165, 48);
-} */
 
 #wrapper > div > div.currentPosition {
     background-image: url("./poke_ash-removebg-preview.png");
-    /* background: black; */
     background-repeat: no-repeat;
     background-size: 100%;
+}
+
+/* bottom of mainScreenSection */
+#consoleHUD {
+    margin-top: 1em;
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    border: 2px solid black;
+}
+
+#eventLogger{
+    grid-row-start: 1;
+    grid-row-end: 3;
+    background: pink;
+    text-align: left;
+    height: 45vh;
+}
+
+#eventHistory{
+    overflow-y: auto;
+    text-align: left;
+    position: absolute;
+    width:73%;
+    height: 45vh;
+    margin-left: 1em;
+}
+
+#eventHistory::-webkit-scrollbar {
+    display: none;
+}
+
+.consoleButtons {
+    text-align: center;
+    background-color: pink;
+    border: 1px solid darkgrey;
+}
+
+div.consoleButtons > button {
+    padding: auto;
+    width:100%;
+    height: 100%;
+    display: block;
+    font-size: 2em;
+}
+
+/* bagScreen Section */
+#bagGridBox{
+    display: grid;
+    grid-template-columns: 1fr 1fr 0.2fr;
+    gap: 1em;
+    height: 95vh;
 
 }
 
-/* bottom section */
-footer {
-    padding-top: 1em;
+#itemDiv {
+    margin: 0;
+    height: 100%;
+    background-color: lightgoldenrodyellow;
+    border: 2px solid goldenrod;
 }
 
+#pokemonDiv {
+    margin: 0;
+    height: 100%;
+    background: lightgreen;
+    border: 2px solid goldenrod;
+}
+
+#returnToMain {
+    font-size: 2em;
+}
+
+div#bagGridBox > div > h1 {
+    padding-left: 1em;
+    border-bottom: 3px solid goldenrod;
+}
+
+/* CombatScreen */
+.combatContainer {
+    display: block;
+    border: 2px solid black;
+    height: 70vh; 
+    background-image: url("./GrassyField.png");
+    background-size: cover;
+    background-position-y: bottom;
+    background-repeat: no-repeat;
+}
+
+#opponentPokemon {
+    grid-column-start: 3;
+    grid-column-end: 4;
+    text-align: center;
+    display: block;
+    position: absolute;
+    width: 25%;
+    bottom: 55%;
+    right: 13%
+}
+
+#opponentStats {
+    grid-column-start: 3;
+    grid-column-end: 4;
+    position: absolute;
+    width: 25%;
+    top: 31%;
+    left: 71%;
+
+}
+
+#allyPokemon {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    text-align: center;
+    position: absolute;
+    width: 25%;
+    top: 30%;
+    left: 15%;
+}
+
+#allyStats {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    position: absolute;
+    width: 25%;
+    top: 64%;
+    left: 25%;
+}
+
+#combatNavBar {
+    margin-top: 1em;
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    border: 2px solid black;
+    height: 25vh;
+    padding: 0.2em;
+    grid-gap: 0.2em;
+}
+
+#movesNav{
+    grid-row-start: 1;
+    grid-row-end: 3;
+    grid-column-start: 1;
+    grid-column-end: 2;
+    padding: 0.2em;
+}
+
+#movesList{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    height:100%;
+    grid-gap: 0.2em;
+}
+
+#eventLoggerCombat{
+    background: pink;
+    text-align: left;
+    margin: 1em;
+    height: 20vh;
+    width: 80vh;
+    border: 2px solid black
+}
+
+#combatHistory{
+    overflow-y: auto;
+    text-align: left;
+    position: absolute;
+    width: 77vh;;
+    height: 18vh;
+    margin-left: 0.5em;
+    margin-top: 0.5em;
+}
+
+#combatHistory::-webkit-scrollbar {
+    display: none;
+}
+/*
 .information-display {
     display: grid;
     grid-template-columns: 1.5fr 1fr;
     border: 2px solid black ;
-}
+} 
 
 #pokemonDetail {
     background: cyan;
@@ -48,18 +251,19 @@ footer {
 }
 
 #pokemonDetail > div {
-    padding: 1em 2em;
+    padding: 1em 1em;
 }
 
 #pokemonImgBox {
     background-image: url("./Untitled\ design.png");
     background-repeat: no-repeat;
-    background-size: 100% ;
+    background-size: 50% ;
 }
 
 #pokemonImgBox > img {
     display: block;
     margin-left: auto;
     margin-right: auto;
-    width: 100%;
+    width: 50%;
 }
+*/
