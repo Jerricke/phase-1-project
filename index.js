@@ -1,9 +1,11 @@
 function mainFunction() {
+     //SiwtchingScreens
     const bagScreen = document.getElementById("bagScreen");
     const mainScreen = document.getElementById("mainScreen");
     const combatScreen = document.getElementById("combatScreen");
     const mainMenuScreen = document.getElementById("mainMenuScreen");
     const eventHistory = document.querySelector("#eventHistory");
+    const movesList = document.querySelector("#movesList")
     let combatStatus = false;
 
     combatScreen.style.display = "none";
@@ -34,11 +36,25 @@ function mainFunction() {
             bagScreen.style.display = "none"
             combatScreen.style.display = "block";
         }
-    
+    })
+ 
+    document.querySelector("#bagBtn").addEventListener('click', () => {
+         combatScreen.style.display = "none";
+         bagScreen.style.display = "block"
+    })
+ 
+    document.querySelector("#escapeBtn").addEventListener('click', () => {
+         combatScreen.style.display = "none";
+         mainScreen.style.display = "block"
+         const newEvent = document.createElement("p");
+         newEvent.textContent = "You escaped the Pokemon! Retreating is always an option";
+         eventHistory.appendChild(newEvent);
+         combatStatus = false;
+         skillDeloader();
     })
 
+    //Generating the play area
     serverCoordinateSystem();
-
     function serverCoordinateSystem() {
         //position array
         let currentPosition = [];
@@ -71,6 +87,7 @@ function mainFunction() {
                             coordinateRemover(currentPosition)
                             currentPosition = [currentPosition[0] + 1, currentPosition[1]]
                             coordinateSetter(currentPosition)
+                            probabilityMachine();
                         } else return
         
                         break;
@@ -80,6 +97,7 @@ function mainFunction() {
                             coordinateRemover(currentPosition)
                             currentPosition = [currentPosition[0] - 1, currentPosition[1]]
                             coordinateSetter(currentPosition)
+                            probabilityMachine();
                         } else return
         
                         break;
@@ -89,6 +107,7 @@ function mainFunction() {
                             coordinateRemover(currentPosition)
                             currentPosition = [currentPosition[0], currentPosition[1] + 1]
                             coordinateSetter(currentPosition)
+                            probabilityMachine();
                         } else return
                         
                         break;
@@ -98,35 +117,33 @@ function mainFunction() {
                             coordinateRemover(currentPosition)
                             currentPosition = [currentPosition[0], currentPosition[1] - 1]
                             coordinateSetter(currentPosition)
+                            probabilityMachine();
                         } else return
                     
                         break;
                     default:
                 }
-            } else return 
+            } else return console.log("still in combat");
         }
     
         //intilialize first position at [1,1]
         coordinateSetter([1,1])
-        
         function coordinateSetter(coords) {
             const coordsDiv = document.getElementById(`${coords}`);
             coordsDiv.classList.add("currentPosition")
             currentPosition = coords;
-            probabilityMachine();
         }
     
         function coordinateRemover(coords){
             const coordsDiv = document.getElementById(`${coords}`);
             coordsDiv.classList.remove("currentPosition")
         }
-    
     }
     
     //Encounter Probability Section
     function probabilityMachine() {
-        let token = Math.floor(Math.random() * 100);
-        if (token > 85) {
+        let token = RNG(100)
+        if (token) {
             // const eventHistory = document.querySelector("#eventHistory")
             const newEvent = document.createElement("p");
             newEvent.textContent = "You just encountered a Pokemon!, combat will start in 3 seconds";
@@ -134,15 +151,14 @@ function mainFunction() {
             mockCombatStarter();
         } else return
     }
-    
-    
-    // function pokeFetcher() {
-    //     fetch(`https://pokeapi.co/api/v2/pokemon/${Math.ceil(Math.random() * 350)}`)
-    //         .then(res => res.json())
-    //         // .then(data => pokeEncounter(data))
-    //         .catch(e => console.log(e))
-    // }
 
+    //RandomNumberGenerator
+    function RNG(range) {
+        let RNGval = Math.round(Math.random() * range) 
+        return RNGval
+    }
+
+    //CombatLoader
     function mockCombatStarter() {
         setTimeout( () => {
             mainScreen.style.display = "none";
@@ -150,63 +166,277 @@ function mainFunction() {
         }, 3000)
         combatStatus = true;
         
+        //Load encounter pokemon
         fetch("http://localhost:3000/pokemon/")
             .then(res => res.json())
-            .then(data => combatFunction(data))
+            .then(data => opponentLoader(data))
+            .catch(e => console.log(e))
+
+        //Load player pokemon 
+        fetch("http://localhost:3000/capturedPokemon/")
+            .then(res => res.json())
+            .then(data => allyLoader(data, 0))
             .catch(e => console.log(e))
     }
     //POKEMON COMBAT FUNCTION
-    function combatFunction(data) {
 
-        const opponentPokemon = document.querySelector("#opponentPokemon")
-        const opponentHP = document.querySelector("#opponentHP")
+    let currentAlly = {};
+    function allyLoader(data, i) {
+        currentAlly = data[i];
+
         const allyPokemon = document.querySelector("#allyPokemon")
         const allyHP = document.querySelector("#allyHP")
 
-        opponentPokemon.src = data[0].front_sprite;
-        opponentHP.textContent = data[0].health;
-        
-        allyPokemon.src = data[1].back_sprite;
-        allyHP.textContent = data[1].health;
+        allyPokemon.src = data[i].back_sprite;
+        allyHP.textContent = data[i].health;
 
-        skillLoader(data[1])
+        skillLoader(data[0])
     }
 
+    let currentOpponent = {};
+    function opponentLoader(data) {
+        data = data[RNG(1)]
+        currentOpponent = data;
+        const opponentPokemon = document.querySelector("#opponentPokemon")
+        const opponentHP = document.querySelector("#opponentHP")
+    
+        opponentPokemon.src = data.front_sprite;
+        opponentHP.textContent = data.health;
 
-    const bagBtn = document.querySelector("#bagBtn")
-    const escape = document.querySelector("#escapeBtn")
-    const movesList = document.querySelector("#movesList")
-
-    bagBtn.addEventListener('click', () => {
-        combatScreen.style.display = "none";
-        bagScreen.style.display = "block"
-    })
-
-    escape.addEventListener('click', () => {
-        combatScreen.style.display = "none";
-        mainScreen.style.display = "block"
-        const newEvent = document.createElement("p");
-        newEvent.textContent = "You escaped the Pokemon! Retreating is always an option";
-        eventHistory.appendChild(newEvent);
-        combatStatus = false;
-        skillDeloader();
-    })
+        const combatEvent = document.createElement("p");
+        combatEvent.textContent = `A wild ${data.name} appears!`;
+        combatHistory.appendChild(combatEvent);
+    }
 
     //skill functions
     function skillLoader(data){
         data.moves.forEach( (skill) => {
             const newSkill = document.createElement("button");
             newSkill.textContent = skill.name 
+            newSkill.addEventListener("click", (e) => useSkill(e, data))
             movesList.appendChild(newSkill)
         }) 
     }
 
+    //Depopulates the movesList 
     function skillDeloader() {
         while (movesList.firstChild){
             movesList.removeChild(movesList.firstChild);
         }
     }
+    
+    const combatHistory = document.querySelector("#combatHistory");
 
+    function combatHistoryClear() {
+        while (combatHistory.firstChild){
+            combatHistory.removeChild(combatHistory.firstChild);
+        }
+    }
+
+    //when player clicks on a skill, run useSkill function
+    function useSkill(e, data) {
+        const skillUsed = e.target.textContent;
+        const skill = data.moves.find(skill => skill.name === skillUsed)
+        if (RNG(100) < skill.chance) { //RNG of skill hitting/missing
+            let damageDealt = skill.damage;
+            if (RNG(100) < 15) { //RNG of skill landing a critical 2x multiplier
+                damageDealt = damageDealt * 2;
+                const combatEvent = document.createElement("p");
+                combatEvent.textContent = `Ally ${currentAlly.name}'s attack was CRITICAL!`;
+                combatHistory.appendChild(combatEvent)
+            } else {
+                damageDealt = damageDealt;  //if RNG misses, return normal damage 
+            }
+            allyDealing(damageDealt, data, skill)
+        }   else {
+            const combatEvent = document.createElement("p");
+            combatEvent.textContent = `Ally ${currentAlly.name}'s attack missed!`;
+            combatHistory.appendChild(combatEvent);
+
+            isPlayerTurn = false; //on skill use, change the turn to the opponent's turn
+            turnBaseSystem(); //Pass the turn to the enemy
+        }
+
+    }
+
+    //Allowing opponent to use attacks
+    let isPlayerTurn = true;
+    function turnBaseSystem() {
+        if (!isPlayerTurn) {
+
+            const moveUsed = currentOpponent.moves[RNG(currentOpponent.moves.length-1)];
+            if (RNG(100) < moveUsed.chance) {
+                let damageDealt = moveUsed.damage;
+                if (RNG(100) < 15 ) {
+                    damageDealt = damageDealt * 2;
+                    const combatEvent = document.createElement("p");
+                    combatEvent.textContent = `Enemy's attack was CRITICAL!`;
+                    combatHistory.appendChild(combatEvent)
+                } else {
+                    damageDealt = damageDealt;  //if RNG misses, return normal damage 
+                }
+                enemyDealing(damageDealt, moveUsed)
+            } else {
+                const combatEvent = document.createElement("p");
+                combatEvent.textContent = `Enemy's attack missed!`;
+                combatHistory.appendChild(combatEvent);
+            }
+
+            setTimeout(() => {isPlayerTurn = true}, 1500 )
+        } else return
+    }
+
+    //Function to actually inflict the damage onto ally pokemon
+    function enemyDealing(damage, skill) {
+        const allyHP = document.querySelector("#allyHP");
+        let HPval = parseInt(allyHP.textContent);
+
+        if (HPval > 0 ){ //if ally HP is greater than 0 (aka not dead) deal the damage number
+            HPval = HPval - damage;
+            if (HPval > 0) { //if ally HP after taking damage is not 0 or less, return the attack event
+                allyHP.textContent = HPval
+                const combatEvent = document.createElement("p");
+                combatEvent.textContent = `Enemy ${currentOpponent.name} used ${skill.name} and dealt ${damage} damage`;
+                combatHistory.appendChild(combatEvent);
+
+            }   else { //if ally is dead, indicate death, and also return back to the main play screen
+                const allyPokemon = document.querySelector("#allyPokemon")
+                allyPokemon.style.animation = "shake 0.5s";
+                setTimeout(() => {
+                    allyPokemon.src = " ";
+                    document.querySelector("#allyHP").textContent = "fainted";
+                    allyPokemon.style.animation = "none"
+                }, 1500)
+                setTimeout(()=> {
+                    combatScreen.style.display = "none";
+                    mainScreen.style.display = "block";
+                    document.querySelector("#allyPokemon").src = " ";
+                    document.querySelector("#allyHP").textContent = " ";
+                    skillDeloader();
+                    combatHistoryClear();
+                    
+                    combatStatus = false; //exits combat status so that you can move the character again
+                }, 3000)
+                const newEvent = document.createElement("p");
+                newEvent.textContent = `Your pokemon was defeated by the enemy ${currentOpponent.name}`
+                eventHistory.appendChild(newEvent);
+                const combatEvent = document.createElement("p");
+                combatEvent.textContent = `${currentAlly.name} has fainted`
+                combatHistory.appendChild(combatEvent);
+            }
+        }   else return
+    }
+
+
+    //Function to actually inflict the damage onto the enemy
+    function allyDealing(damage, data, skill) {
+        const opponentHP = document.querySelector("#opponentHP");
+        let HPval = parseInt(opponentHP.textContent);
+
+        if (HPval > 0 ){ //if enemy HP is greater than 0 (aka not dead) deal the damage number
+            HPval = HPval - damage;
+            if (HPval > 0) { //if enemy HP after taking damage is not 0 or less, return the attack event
+                opponentHP.textContent = HPval
+                const combatEvent = document.createElement("p");
+                combatEvent.textContent = `Ally ${data.name} used ${skill.name} and dealt ${damage} damage`;
+                combatHistory.appendChild(combatEvent);
+
+                isPlayerTurn = false; //on skill use, change the turn to the opponent's turn
+                turnBaseSystem(); //Pass the turn to the enemy
+            }   else { //if enemy is dead, indicate death, and also return back to the main play screen
+                const opponentPokemon = document.querySelector("#opponentPokemon")
+                opponentPokemon.style.animation = "shake 0.5s";
+                setTimeout(() => {
+                    opponentPokemon.src = " ";
+                    document.querySelector("#opponentHP").textContent = "fainted";
+                    opponentPokemon.style.animation = "none"
+                }, 1500)
+                setTimeout(()=> {
+                    combatScreen.style.display = "none";
+                    mainScreen.style.display = "block";
+                    document.querySelector("#allyPokemon").src = " ";
+                    document.querySelector("#allyHP").textContent = " ";
+                    skillDeloader();
+                    combatHistoryClear();
+                    
+                    combatStatus = false; //exits combat status so that you can move the character again
+                }, 3000)
+                const newEvent = document.createElement("p");
+                newEvent.textContent = `You defeated the enemy ${currentOpponent.name}`
+                eventHistory.appendChild(newEvent);
+                const combatEvent = document.createElement("p");
+                combatEvent.textContent = `${currentOpponent.name} has fainted`
+                combatHistory.appendChild(combatEvent);
+            }
+        }   else return
+    }
+
+    //Bag Screen function codes
+
+    //very repetitive code below
+    const pokeball = document.querySelector("#pokeball")
+    const pokeballDetails = document.querySelector("#pokeballDetails")
+    pokeballDetails.style.display = "none"
+    pokeball.addEventListener("click", () => {
+        let toggle = pokeballDetails.style.display;
+        if (toggle === "none"){
+            pokeballDetails.style.display = "block";
+            toggle = "block";
+        } else {
+            pokeballDetails.style.display = "none";
+            toggle = "none"
+        }
+    })
+    const masterball = document.querySelector("#masterball")
+    const masterballDetails = document.querySelector("#masterballDetails")
+    masterballDetails.style.display = "none"
+    masterball.addEventListener("click", () => {
+        let toggle = masterballDetails.style.display;
+        if (toggle === "none"){
+            masterballDetails.style.display = "block";
+            toggle = "block";
+        } else {
+            masterballDetails.style.display = "none";
+            toggle = "none"
+        }
+    })
+    const potion = document.querySelector("#potion")
+    const potionDetails = document.querySelector("#potionDetails")
+    potionDetails.style.display = "none"
+    potion.addEventListener("click", () => {
+        let toggle = potionDetails.style.display;
+        if (toggle === "none"){
+            potionDetails.style.display = "block";
+            toggle = "block";
+        } else {
+            potionDetails.style.display = "none";
+            toggle = "none"
+        }
+    })
+    const gPotion = document.querySelector("#gPotion")
+    const gPotionDetails = document.querySelector("#gPotionDetails")
+    gPotionDetails.style.display = "none"
+    gPotion.addEventListener("click", () => {
+        let toggle = gPotionDetails.style.display;
+        if (toggle === "none"){
+            gPotionDetails.style.display = "block";
+            toggle = "block";
+        } else {
+            gPotionDetails.style.display = "none";
+            toggle = "none"
+        }
+    })
+
+    //Potion Function
+    document.querySelector("#usePotion").addEventListener("click", heal(10))
+
+    function heal(healing) {
+        let currentHP;
+        const allyHP = document.querySelector("#allyHP");
+        currentHP = parseInt(allyHP) + healing;
+        allyHP.textContent = currentHP;
+    }
 }
+
 
 document.addEventListener("DOMContentLoaded", mainFunction())

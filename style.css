@@ -13,7 +13,7 @@ body {
 /* mainMenuScreen Section */
 #mainContainer {
     height: 100vh;
-    background-image: url("./pokemonMainMenu.webp");
+    background-image: url("./src/screen_images/pokemonMainMenu.webp");
     background-size: 25%;
     text-align: center;
 }
@@ -51,12 +51,12 @@ button:hover {
 }
 
 #wrapper {
-    background-image: url(./grass_tile.png);
+    background-image: url("./src/screen_images/grass_tile.png");
     background-size: 30%;
 }
 
 #wrapper > div > div.currentPosition {
-    background-image: url("./poke_ash-removebg-preview.png");
+    background-image: url("./src/screen_images/poke_ash-removebg-preview.png");
     background-repeat: no-repeat;
     background-size: 100%;
 }
@@ -111,7 +111,7 @@ div.consoleButtons > button {
     grid-template-columns: 1fr 1fr 0.2fr;
     gap: 1em;
     height: 95vh;
-
+    margin-top: 1vh;
 }
 
 #itemDiv {
@@ -119,6 +119,15 @@ div.consoleButtons > button {
     height: 100%;
     background-color: lightgoldenrodyellow;
     border: 2px solid goldenrod;
+}
+
+#itemList > div {
+    padding: 1em;
+    font-size: 1.5em;
+    cursor: pointer;
+}
+#itemList > div  span {
+    font-size: 0.5em;
 }
 
 #pokemonDiv {
@@ -137,12 +146,13 @@ div#bagGridBox > div > h1 {
     border-bottom: 3px solid goldenrod;
 }
 
+
 /* CombatScreen */
 .combatContainer {
     display: block;
     border: 2px solid black;
     height: 70vh; 
-    background-image: url("./GrassyField.png");
+    background-image: url("./src/screen_images/GrassyField.png");
     background-size: cover;
     background-position-y: bottom;
     background-repeat: no-repeat;
@@ -156,7 +166,7 @@ div#bagGridBox > div > h1 {
     position: absolute;
     width: 25%;
     bottom: 55%;
-    right: 13%
+    right: 13%;
 }
 
 #opponentStats {
@@ -234,9 +244,27 @@ div#bagGridBox > div > h1 {
     margin-top: 0.5em;
 }
 
+#combatHistory > p {
+    margin-left: 0.3em;
+}
+
 #combatHistory::-webkit-scrollbar {
     display: none;
 }
+
+@keyframes shake {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    10% { transform: translate(-1px, -2px) rotate(-1deg); }
+    20% { transform: translate(-3px, 0px) rotate(1deg); }
+    30% { transform: translate(3px, 2px) rotate(0deg); }
+    40% { transform: translate(1px, -1px) rotate(1deg); }
+    50% { transform: translate(-1px, 2px) rotate(-1deg); }
+    60% { transform: translate(-3px, 1px) rotate(0deg); }
+    70% { transform: translate(3px, 1px) rotate(-1deg); }
+    80% { transform: translate(-1px, -1px) rotate(1deg); }
+    90% { transform: translate(1px, 2px) rotate(0deg); }
+    100% { transform: translate(1px, -2px) rotate(-1deg); }
+  }
 /*
 .information-display {
     display: grid;
