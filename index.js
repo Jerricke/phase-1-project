@@ -47,10 +47,11 @@ function mainFunction() {
          combatScreen.style.display = "none";
          mainScreen.style.display = "block"
          const newEvent = document.createElement("p");
-         newEvent.textContent = "You escaped the Pokemon! Retreating is always an option";
+         newEvent.textContent = "You escaped the Pokemon!";
          eventHistory.appendChild(newEvent);
          combatStatus = false;
          skillDeloader();
+         combatHistoryClear();
     })
 
     //Generating the play area
@@ -195,7 +196,7 @@ function mainFunction() {
 
     let currentOpponent = {};
     function opponentLoader(data) {
-        data = data[RNG(1)]
+        data = data[RNG(data.length - 1 )]
         currentOpponent = data;
         const opponentPokemon = document.querySelector("#opponentPokemon")
         const opponentHP = document.querySelector("#opponentHP")
@@ -428,15 +429,38 @@ function mainFunction() {
     })
 
     //Potion Function
-    document.querySelector("#usePotion").addEventListener("click", heal(10))
+    document.querySelector("#usePotion").addEventListener("click", () =>{
+        heal(10);
+
+        const combatEvent = document.createElement("p");
+        combatEvent.textContent = `You used a potion on ${currentAlly.name}`;
+        combatHistory.appendChild(combatEvent);
+
+        bagScreen.style.display = "none"
+        combatScreen.style.display = "block";
+    })
+
+    document.querySelector("#useGPotion").addEventListener("click", () => {
+        heal(20);
+
+        const combatEvent = document.createElement("p");
+        combatEvent.textContent = `You used a great potion on ${currentAlly.name}`;
+        combatHistory.appendChild(combatEvent);
+
+        bagScreen.style.display = "none"
+        combatScreen.style.display = "block";
+    })
 
     function heal(healing) {
-        let currentHP;
+        let newHP;
         const allyHP = document.querySelector("#allyHP");
-        currentHP = parseInt(allyHP) + healing;
-        allyHP.textContent = currentHP;
+        newHP = parseInt(allyHP.textContent) + healing;
+        if (newHP > currentAlly.max_health) {
+            allyHP.textContent = currentAlly.max_health;
+        } else {
+            allyHP.textContent = newHP;   
+        }
     }
 }
-
 
 document.addEventListener("DOMContentLoaded", mainFunction())

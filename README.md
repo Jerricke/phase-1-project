@@ -15,3 +15,13 @@
     -> Basically allows the enemy pokemon to attack currnet ally pokemon after each player move
 9 - Implemented the items functionalities in the bag screen
 10 - Implemented the use function for the potions 
+
+
+
+# Deliverables to work on
+1. Add a new data set to track player items (implement fetch patch).
+2. Fetch patch the hp status of our pokemon after a combat.
+3. Capture pokemon using pokeballs/master balls.
+4. Fetch patch the new pokemons into our player's captured pokemon data.
+5. Plan out the ending for the game.
+6. Create a game start feature where player gets to pick which pokemon to start with.
