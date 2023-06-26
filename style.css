@@ -153,6 +153,22 @@ div#bagGridBox > div > h1 {
     border-bottom: 3px solid goldenrod;
 }
 
+#pokemonList > div  {
+    padding: 1em;
+    font-size: 1.5em;
+    cursor: pointer;
+    position: relative;
+}
+
+#pokemonList > div > div > p {
+    font-size: 0.5em;
+}
+
+#pokemonList > div > div > img {
+    position: absolute;
+    right: 1em;
+    top: 0.25em;
+}
 
 /* CombatScreen */
 .combatContainer {

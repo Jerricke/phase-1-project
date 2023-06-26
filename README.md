@@ -22,12 +22,15 @@ Hello! this is my phase-1-project for flatiron school's SWE program. I set out t
 14. Updated bag items buttons, now no longer able to use items unless engaged in combat, items are only usable on the currently active pokemon.
 15. Added a tracker for player items count
 16. Playeres can now only use items when the count is greater than 0.
-17. 
+17. Implemented a working display list for captured pokemons, toggle-able to display hp and image
+
 
 
 
 # Deliverables to work on
-1. Update the bag -> pokemon section to reflect currently captured pokemons
+1. Update probability machine to drop items by chance
+2. Update combat system/pokemon list to allow swapping active pokemon during combat
+3. Update combat system to prompt user to select other pokemons when active pokemon faints
 
 # Stertch Deliverables
 1. Create a game start feature where player gets to pick which pokemon to start with.

@@ -384,6 +384,46 @@ function mainFunction() {
 
     //Bag Screen function codes
 
+    //Load pokemon list
+    pokemonListLoader();
+    function pokemonListLoader() {
+        fetch("http://localhost:3000/capturedPokemon/")
+        .then(res => res.json())
+        .then(data => {
+            data.forEach(poke => {
+                const pokeList = document.querySelector("#pokemonList");
+                const newDiv = document.createElement("div");
+                const newDet = document.createElement("div");
+                const newTag = document.createElement("p");
+                const newImg = document.createElement("img");
+
+                newDet.textContent = poke.name;
+                pokeList.appendChild(newDet);
+
+                newDet.appendChild(newDiv);
+
+                newImg.src = poke.front_sprite;
+                newDiv.appendChild(newImg)
+
+                newTag.textContent = `Hp: ${poke.health}`;
+                newDiv.appendChild(newTag);
+
+                newDiv.style.display = "none"
+                newDet.addEventListener("click", () => {
+                    let toggle = newDiv.style.display;
+                    if (toggle === "none"){
+                        newDiv.style.display = "block";
+                        toggle = "block";
+                    } else {
+                        newDiv.style.display = "none";
+                        toggle = "none"
+                    }
+                })
+            })
+        })
+        .catch(e => console.log(e))
+    }
+
     //Load items count
     itemsCountLoader();
     function itemsCountLoader() {
