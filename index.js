@@ -7,6 +7,8 @@ function mainFunction() {
     const eventHistory = document.querySelector("#eventHistory");
     const movesList = document.querySelector("#movesList")
     let combatStatus = false;
+    let isPlayStatus = false;
+    bagScreenChange();
 
     combatScreen.style.display = "none";
     bagScreen.style.display = "none";
@@ -16,11 +18,13 @@ function mainFunction() {
     document.getElementById("gameStart").addEventListener('click', () => {
         mainMenuScreen.style.display = "none"
         mainScreen.style.display = "block";
+        isPlayStatus = true;
     })
 
     document.getElementById("bag").addEventListener('click', () => {
         mainScreen.style.display = "none";
-        bagScreen.style.display = "block"
+        bagScreen.style.display = "block";
+        isPlayStatus = false;
     })
 
     document.getElementById("main-menu").addEventListener('click', () =>{
@@ -44,14 +48,7 @@ function mainFunction() {
     })
  
     document.querySelector("#escapeBtn").addEventListener('click', () => {
-         combatScreen.style.display = "none";
-         mainScreen.style.display = "block"
-         const newEvent = document.createElement("p");
-         newEvent.textContent = "You escaped the Pokemon!";
-         eventHistory.appendChild(newEvent);
-         combatStatus = false;
-         skillDeloader();
-         combatHistoryClear();
+         combatLeave("You escaped the Pokemon!");
     })
 
     //Generating the play area
@@ -80,7 +77,7 @@ function mainFunction() {
         document.addEventListener('keydown', (e)=> movement(e, currentPosition));
     
         function movement(e, currentPosition) {
-            if (!combatStatus) {
+            if (isPlayStatus) {
                 switch (e.key) {
                     case "ArrowRight":
         
@@ -124,7 +121,7 @@ function mainFunction() {
                         break;
                     default:
                 }
-            } else return console.log("still in combat");
+            } else return console.error("NOT IN PLAY SCREEN");
         }
     
         //intilialize first position at [1,1]
@@ -144,12 +141,13 @@ function mainFunction() {
     //Encounter Probability Section
     function probabilityMachine() {
         let token = RNG(100)
-        if (token) {
+        if (token > 75) {
             // const eventHistory = document.querySelector("#eventHistory")
             const newEvent = document.createElement("p");
             newEvent.textContent = "You just encountered a Pokemon!, combat will start in 3 seconds";
             eventHistory.appendChild(newEvent);
             mockCombatStarter();
+            isPlayStatus = false;
         } else return
     }
 
@@ -166,6 +164,7 @@ function mainFunction() {
             combatScreen.style.display = "block";
         }, 3000)
         combatStatus = true;
+        bagScreenChange();
         
         //Load encounter pokemon
         fetch("http://localhost:3000/pokemon/")
@@ -176,7 +175,21 @@ function mainFunction() {
         //Load player pokemon 
         fetch("http://localhost:3000/capturedPokemon/")
             .then(res => res.json())
-            .then(data => allyLoader(data, 0))
+            .then(data => {
+                let i = 0;
+                function ifLooper() {
+                    if (data[i].is_fainted === true) {      //ensures that we don't load a fainted pokemon
+                        i = i + 1;
+                        ifLooper();
+                    } else return i
+                }
+                if (data[i].is_fainted === true) {      //ensures that we don't load a fainted pokemon
+                    i = i + 1;
+                    allyLoader(data, i);
+                } else {
+                    allyLoader(data, i)
+                }
+            })
             .catch(e => console.log(e))
     }
     //POKEMON COMBAT FUNCTION
@@ -191,7 +204,7 @@ function mainFunction() {
         allyPokemon.src = data[i].back_sprite;
         allyHP.textContent = data[i].health;
 
-        skillLoader(data[0])
+        skillLoader(data[i])
     }
 
     let currentOpponent = {};
@@ -204,9 +217,7 @@ function mainFunction() {
         opponentPokemon.src = data.front_sprite;
         opponentHP.textContent = data.health;
 
-        const combatEvent = document.createElement("p");
-        combatEvent.textContent = `A wild ${data.name} appears!`;
-        combatHistory.appendChild(combatEvent);
+        combatEventLogger(`A wild ${data.name} appears!`);
     }
 
     //skill functions
@@ -242,17 +253,13 @@ function mainFunction() {
             let damageDealt = skill.damage;
             if (RNG(100) < 15) { //RNG of skill landing a critical 2x multiplier
                 damageDealt = damageDealt * 2;
-                const combatEvent = document.createElement("p");
-                combatEvent.textContent = `Ally ${currentAlly.name}'s attack was CRITICAL!`;
-                combatHistory.appendChild(combatEvent)
+                combatEventLogger(`Ally ${currentAlly.name}'s attack was CRITICAL!`);
             } else {
                 damageDealt = damageDealt;  //if RNG misses, return normal damage 
             }
             allyDealing(damageDealt, data, skill)
         }   else {
-            const combatEvent = document.createElement("p");
-            combatEvent.textContent = `Ally ${currentAlly.name}'s attack missed!`;
-            combatHistory.appendChild(combatEvent);
+            combatEventLogger(`Ally ${currentAlly.name}'s attack missed!`);
 
             isPlayerTurn = false; //on skill use, change the turn to the opponent's turn
             turnBaseSystem(); //Pass the turn to the enemy
@@ -270,17 +277,13 @@ function mainFunction() {
                 let damageDealt = moveUsed.damage;
                 if (RNG(100) < 15 ) {
                     damageDealt = damageDealt * 2;
-                    const combatEvent = document.createElement("p");
-                    combatEvent.textContent = `Enemy's attack was CRITICAL!`;
-                    combatHistory.appendChild(combatEvent)
+                    combatEventLogger(`Enemy's attack was CRITICAL!`);
                 } else {
                     damageDealt = damageDealt;  //if RNG misses, return normal damage 
                 }
                 enemyDealing(damageDealt, moveUsed)
             } else {
-                const combatEvent = document.createElement("p");
-                combatEvent.textContent = `Enemy's attack missed!`;
-                combatHistory.appendChild(combatEvent);
+                combatEventLogger(`Enemy's attack missed!`);
             }
 
             setTimeout(() => {isPlayerTurn = true}, 1500 )
@@ -296,13 +299,20 @@ function mainFunction() {
             HPval = HPval - damage;
             if (HPval > 0) { //if ally HP after taking damage is not 0 or less, return the attack event
                 allyHP.textContent = HPval
-                const combatEvent = document.createElement("p");
-                combatEvent.textContent = `Enemy ${currentOpponent.name} used ${skill.name} and dealt ${damage} damage`;
-                combatHistory.appendChild(combatEvent);
+
+                //PATCHING HP DATA
+                allyDataPatcher({health: HPval})
+
+                combatEventLogger(`Enemy ${currentOpponent.name} used ${skill.name} and dealt ${damage} damage`);
 
             }   else { //if ally is dead, indicate death, and also return back to the main play screen
                 const allyPokemon = document.querySelector("#allyPokemon")
                 allyPokemon.style.animation = "shake 0.5s";
+
+                //PATCHING FAINT STATUS
+                allyDataPatcher({health: HPval})
+                allyDataPatcher({is_fainted: true})
+
                 setTimeout(() => {
                     allyPokemon.src = " ";
                     document.querySelector("#allyHP").textContent = "fainted";
@@ -317,13 +327,12 @@ function mainFunction() {
                     combatHistoryClear();
                     
                     combatStatus = false; //exits combat status so that you can move the character again
+                    bagScreenChange();
                 }, 3000)
                 const newEvent = document.createElement("p");
                 newEvent.textContent = `Your pokemon was defeated by the enemy ${currentOpponent.name}`
                 eventHistory.appendChild(newEvent);
-                const combatEvent = document.createElement("p");
-                combatEvent.textContent = `${currentAlly.name} has fainted`
-                combatHistory.appendChild(combatEvent);
+                combatEventLogger(`${currentAlly.name} has fainted`);
             }
         }   else return
     }
@@ -338,9 +347,8 @@ function mainFunction() {
             HPval = HPval - damage;
             if (HPval > 0) { //if enemy HP after taking damage is not 0 or less, return the attack event
                 opponentHP.textContent = HPval
-                const combatEvent = document.createElement("p");
-                combatEvent.textContent = `Ally ${data.name} used ${skill.name} and dealt ${damage} damage`;
-                combatHistory.appendChild(combatEvent);
+                currentOpponent.health = HPval
+                combatEventLogger(`Ally ${data.name} used ${skill.name} and dealt ${damage} damage`);
 
                 isPlayerTurn = false; //on skill use, change the turn to the opponent's turn
                 turnBaseSystem(); //Pass the turn to the enemy
@@ -359,15 +367,14 @@ function mainFunction() {
                     document.querySelector("#allyHP").textContent = " ";
                     skillDeloader();
                     combatHistoryClear();
-                    
-                    combatStatus = false; //exits combat status so that you can move the character again
+                    bagScreenChange();
+                    combatStatus = false; 
+                    isPlayStatus = true;
                 }, 3000)
                 const newEvent = document.createElement("p");
                 newEvent.textContent = `You defeated the enemy ${currentOpponent.name}`
                 eventHistory.appendChild(newEvent);
-                const combatEvent = document.createElement("p");
-                combatEvent.textContent = `${currentOpponent.name} has fainted`
-                combatHistory.appendChild(combatEvent);
+                combatEventLogger(`${currentOpponent.name} has fainted`);
             }
         }   else return
     }
@@ -429,12 +436,24 @@ function mainFunction() {
     })
 
     //Potion Function
+    function bagScreenChange() {
+        if (!combatStatus) {
+            document.querySelector("#usePotion").disabled = true;
+            document.querySelector("#useGPotion").disabled = true;
+            document.querySelector("#usePokeball").disabled = true;
+            document.querySelector("#useMasterball").disabled = true;
+        } else {
+            document.querySelector("#usePotion").disabled = false;
+            document.querySelector("#useGPotion").disabled = false;
+            document.querySelector("#usePokeball").disabled = false;
+            document.querySelector("#useMasterball").disabled = false;
+        }
+    }
+
     document.querySelector("#usePotion").addEventListener("click", () =>{
         heal(10);
 
-        const combatEvent = document.createElement("p");
-        combatEvent.textContent = `You used a potion on ${currentAlly.name}`;
-        combatHistory.appendChild(combatEvent);
+        combatEventLogger(`You used a potion on ${currentAlly.name}`);
 
         bagScreen.style.display = "none"
         combatScreen.style.display = "block";
@@ -443,10 +462,7 @@ function mainFunction() {
     document.querySelector("#useGPotion").addEventListener("click", () => {
         heal(20);
 
-        const combatEvent = document.createElement("p");
-        combatEvent.textContent = `You used a great potion on ${currentAlly.name}`;
-        combatHistory.appendChild(combatEvent);
-
+        combatEventLogger(`You used a great potion on ${currentAlly.name}`);
         bagScreen.style.display = "none"
         combatScreen.style.display = "block";
     })
@@ -460,6 +476,83 @@ function mainFunction() {
         } else {
             allyHP.textContent = newHP;   
         }
+
+        //PATCHING HP DATA
+        allyDataPatcher({health: newHP})
+    }
+
+    //Pokemon Capturing 
+    document.querySelector("#usePokeball").addEventListener("click", () => pokemonCapture(50))
+    document.querySelector("#useMasterball").addEventListener("click", () => pokemonCapture(75))
+
+    function pokemonCapture(rate) {
+        if (currentOpponent.health > 5 ) {
+            if (RNG(100) < rate) {
+                pokemonCaptureSucess()
+            } else pokemonCaptureFail()
+        } else {
+            if (RNG(100) < rate*2) {
+                pokemonCaptureSucess()
+            } else pokemonCaptureFail()
+        }
+    }
+    function pokemonCaptureSucess() {
+        newPokemonAdder(currentOpponent);
+        bagScreen.style.display = "none";
+        combatScreen.style.display = "block";
+        opponentPokemon.style.animation = "shake 0.5s";
+        setTimeout(() => {
+            combatLeave(`Successfully captured the pokemon!`);
+            opponentPokemon.style.animation = "none";
+        }, 2000)
+    }
+
+    function pokemonCaptureFail() {
+        combatEventLogger(`Failed to capture the pokemon`)
+    }
+
+    //implementing persistency 
+    function allyDataPatcher(data) { //input an object with the data to update
+        fetch(`http://localhost:3000/capturedPokemon/${currentAlly.id}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type" : "application/json"
+            },
+            body: JSON.stringify(data)
+        })
+        .catch(e => console.log(e))
+    }
+
+    function newPokemonAdder(data) {
+        currentOpponent = delete currentOpponent.id;
+        fetch(`http://localhost:3000/capturedPokemon/`, {
+            method: "POST",
+            headers: {
+                "Content-Type" : "application/json"
+            },
+            body: JSON.stringify(data)
+        })
+        .catch(e => console.log(e))
+    }
+
+    //creating Re-Usable functions
+    function combatLeave(message) {
+        combatScreen.style.display = "none";
+        mainScreen.style.display = "block"
+        const newEvent = document.createElement("p");
+        newEvent.textContent = message;
+        eventHistory.appendChild(newEvent);
+        combatStatus = false;
+        bagScreenChange();
+        skillDeloader();
+        combatHistoryClear();
+        isPlayStatus = true;
+    }
+
+    function combatEventLogger(message) {
+        const combatEvent = document.createElement("p");
+        combatEvent.textContent = message;
+        combatHistory.appendChild(combatEvent);
     }
 }
 

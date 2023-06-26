@@ -15,14 +15,21 @@ Hello! this is my phase-1-project for flatiron school's SWE program. I set out t
 8. Implemented the battle turn base system
     -> Basically allows the enemy pokemon to attack currnet ally pokemon after each player move
 9. Implemented the items functionalities in the bag screen
-10.Implemented the use function for the potions 
+10. Implemented the use function for the potions 
+11. Implemented fetch patch for the hp updates on ally pokemon, hp now persists through combats.
+12. Capturing pokemon is now functional, and the captured pokemon will exist in captured pokemons' database.
+13. Updated gamewide statuses, no longer able to move/encounter pokemons while in bag or combat.
+14. Updated bag items buttons, now no longer able to use items unless engaged in combat, items are only usable on the currently active pokemon.
 
 
 
 # Deliverables to work on
 1. Add a new data set to track player items (implement fetch patch).
-2. Fetch patch the hp status of our pokemon after a combat.
-3. Capture pokemon using pokeballs/master balls.
-4. Fetch patch the new pokemons into our player's captured pokemon data.
-5. Plan out the ending for the game.
-6. Create a game start feature where player gets to pick which pokemon to start with.
+2. Update the bag -> pokemon section to reflect currently captured pokemons
+
+# Stertch Deliverables
+1. Create a game start feature where player gets to pick which pokemon to start with.
+2. Create an exp/levling system for the captured pokemons
+3. Create an evolution system for the captured pokemons
+4. Create a skill learn/unlearn system for the captured pokemons
+2. Plan out the ending for the game
