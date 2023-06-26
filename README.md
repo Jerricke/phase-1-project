@@ -21,12 +21,13 @@ Hello! this is my phase-1-project for flatiron school's SWE program. I set out t
 13. Updated gamewide statuses, no longer able to move/encounter pokemons while in bag or combat.
 14. Updated bag items buttons, now no longer able to use items unless engaged in combat, items are only usable on the currently active pokemon.
 15. Added a tracker for player items count
+16. Playeres can now only use items when the count is greater than 0.
+17. 
 
 
 
 # Deliverables to work on
-1. Update the item tracker, and allow players to use items only when there is more than 0.
-2. Update the bag -> pokemon section to reflect currently captured pokemons
+1. Update the bag -> pokemon section to reflect currently captured pokemons
 
 # Stertch Deliverables
 1. Create a game start feature where player gets to pick which pokemon to start with.

@@ -36,6 +36,7 @@ function mainFunction() {
         if (!combatStatus){
             bagScreen.style.display = "none"
             mainScreen.style.display = "block";
+            isPlayStatus = true;
         } else {
             bagScreen.style.display = "none"
             combatScreen.style.display = "block";
@@ -308,9 +309,10 @@ function mainFunction() {
             }   else { //if ally is dead, indicate death, and also return back to the main play screen
                 const allyPokemon = document.querySelector("#allyPokemon")
                 allyPokemon.style.animation = "shake 0.5s";
+                allyHP.textContent = 0;
 
                 //PATCHING FAINT STATUS
-                allyDataPatcher({health: HPval})
+                allyDataPatcher({health: 0})
                 allyDataPatcher({is_fainted: true})
 
                 setTimeout(() => {
@@ -321,8 +323,8 @@ function mainFunction() {
                 setTimeout(()=> {
                     combatScreen.style.display = "none";
                     mainScreen.style.display = "block";
-                    document.querySelector("#allyPokemon").src = " ";
-                    document.querySelector("#allyHP").textContent = " ";
+                    // document.querySelector("#allyPokemon").src = " ";
+                    // document.querySelector("#allyHP").textContent = " ";
                     skillDeloader();
                     combatHistoryClear();
                     
@@ -363,11 +365,12 @@ function mainFunction() {
                 setTimeout(()=> {
                     combatScreen.style.display = "none";
                     mainScreen.style.display = "block";
-                    document.querySelector("#allyPokemon").src = " ";
-                    document.querySelector("#allyHP").textContent = " ";
+                    // document.querySelector("#allyPokemon").src = " ";
+                    // document.querySelector("#allyHP").textContent = " ";
                     skillDeloader();
                     combatHistoryClear();
                     bagScreenChange();
+                    allyDataPatcher({health: parseInt(document.querySelector("#allyHP").textContent)});
                     combatStatus = false; 
                     isPlayStatus = true;
                 }, 3000)
@@ -392,16 +395,16 @@ function mainFunction() {
             for (let item in data) {
                 itemCountArray.push(data[item])
             }
-            document.querySelector("#pokeballCount").textContent = itemCountArray[0];
-            document.querySelector("#masterballCount").textContent = itemCountArray[1];
-            document.querySelector("#potionCount").textContent = itemCountArray[2];
-            document.querySelector("#gPotionCount").textContent = itemCountArray[3];
+            document.querySelector("#pokeballCount").textContent = itemCountArray[1];
+            document.querySelector("#masterballCount").textContent = itemCountArray[2];
+            document.querySelector("#potionCount").textContent = itemCountArray[3];
+            document.querySelector("#gPotionCount").textContent = itemCountArray[4];
         })
         .catch(e => console.log(e))
     }
 
 
-    //very repetitive code below
+    //very repetitive code below, Toggle for each item description
     const pokeball = document.querySelector("#pokeball")
     const pokeballDetails = document.querySelector("#pokeballDetails")
     pokeballDetails.style.display = "none"
@@ -456,6 +459,7 @@ function mainFunction() {
     })
 
     //Potion Function
+    //Disabling use buttons when not in combat
     function bagScreenChange() {
         if (!combatStatus) {
             document.querySelector("#usePotion").disabled = true;
@@ -471,20 +475,38 @@ function mainFunction() {
     }
 
     document.querySelector("#usePotion").addEventListener("click", () =>{
-        heal(10);
+        const potionCount = document.querySelector("#potionCount");
 
-        combatEventLogger(`You used a potion on ${currentAlly.name}`);
+        if (parseInt(potionCount.textContent) > 0) {
+            heal(10);
 
-        bagScreen.style.display = "none"
-        combatScreen.style.display = "block";
+            combatEventLogger(`You used a potion on ${currentAlly.name}`);
+
+            let newPotionCount = (parseInt(potionCount.textContent) - 1);
+            potionCount.textContent = newPotionCount        
+            inventoryDataPatcher({potion: newPotionCount})
+
+            bagScreen.style.display = "none"
+            combatScreen.style.display = "block";
+        } else return
     })
 
     document.querySelector("#useGPotion").addEventListener("click", () => {
-        heal(20);
+        const gPotionCount = document.querySelector("#gPotionCount");
+        
+        if (parseInt(gPotionCount.textContent) > 0 ) {
+            heal(20);
 
-        combatEventLogger(`You used a great potion on ${currentAlly.name}`);
-        bagScreen.style.display = "none"
-        combatScreen.style.display = "block";
+            combatEventLogger(`You used a great potion on ${currentAlly.name}`);
+
+            let newGPotionCount = (parseInt(gPotionCount.textContent) - 1);
+            gPotionCount.textContent = newGPotionCount        
+            inventoryDataPatcher({potion: newGPotionCount})
+
+            bagScreen.style.display = "none"
+            combatScreen.style.display = "block";
+        } else return
+        
     })
 
     function heal(healing) {
@@ -493,8 +515,10 @@ function mainFunction() {
         newHP = parseInt(allyHP.textContent) + healing;
         if (newHP > currentAlly.max_health) {
             allyHP.textContent = currentAlly.max_health;
+            console.log("regular heal");
         } else {
             allyHP.textContent = newHP;   
+            console.log("healed to max");
         }
 
         //PATCHING HP DATA
@@ -502,19 +526,50 @@ function mainFunction() {
     }
 
     //Pokemon Capturing 
-    document.querySelector("#usePokeball").addEventListener("click", () => pokemonCapture(50))
-    document.querySelector("#useMasterball").addEventListener("click", () => pokemonCapture(75))
+    document.querySelector("#usePokeball").addEventListener("click", () => {
+        let pokeballCount = document.querySelector("#pokeballCount")
+        if (parseInt(pokeballCount.textContent) > 0) {
+            let newPokeballCount = (parseInt(pokeballCount.textContent) - 1);
+            pokeballCount.textContent = newPokeballCount        
+            inventoryDataPatcher({pokeball: newPokeballCount})
+
+            pokemonCapture(50)
+        }
+    })
+    document.querySelector("#useMasterball").addEventListener("click", () => {
+        let masterballCount = document.querySelector("#masterballCount")
+
+        if (parseInt(masterballCount.textContent) > 0) {
+            let newMasterballCount = (parseInt(masterballCount.textContent) - 1);
+            masterballCount.textContent = newMasterballCount        
+            inventoryDataPatcher({masterball: newMasterballCount})
+
+            pokemonCapture(75)
+        }
+    })
 
     function pokemonCapture(rate) {
-        if (currentOpponent.health > 5 ) {
-            if (RNG(100) < rate) {
-                pokemonCaptureSucess()
-            } else pokemonCaptureFail()
-        } else {
-            if (RNG(100) < rate*2) {
-                pokemonCaptureSucess()
-            } else pokemonCaptureFail()
-        }
+            if (currentOpponent.health > 5 ) {
+                if (RNG(100) < rate) {
+                    pokemonCaptureSucess()
+                } else pokemonCaptureFail()
+            } else {
+                if (RNG(100) < rate*2) {
+                    pokemonCaptureSucess()
+                } else pokemonCaptureFail()
+            }
+        } 
+
+
+    function inventoryDataPatcher(item) {
+        fetch(`http://localhost:3000/bagItems/1`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type" : "application/json"
+            },
+            body: JSON.stringify(item)
+        })
+        .catch(e => console.log(e));
     }
 
     function pokemonCaptureSucess() {

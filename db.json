@@ -183,7 +183,7 @@
       "id": 1,
       "name": "pikachu",
       "type": "lightning",
-      "health": 24,
+      "health": 14,
       "max_health": 24,
       "is_fainted": false,
       "front_sprite": "./src/pokemon_images/pikachu_front.png",
@@ -214,10 +214,11 @@
   ],
   "bagItems": [
     {
-        "pokeball": 5,
-        "masterball": 1,
-        "potion": 4,
-        "great_potion": 2
+      "id": 1,
+      "pokeball": 4,
+      "masterball": 1,
+      "potion": 2,
+      "great_potion": 2
     }
   ]
 }
