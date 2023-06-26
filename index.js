@@ -381,6 +381,26 @@ function mainFunction() {
 
     //Bag Screen function codes
 
+    //Load items count
+    itemsCountLoader();
+    function itemsCountLoader() {
+        let itemCountArray = [];
+        fetch("http://localhost:3000/bagItems/")
+        .then(res => res.json())
+        .then(data => {
+            data = data[0];
+            for (let item in data) {
+                itemCountArray.push(data[item])
+            }
+            document.querySelector("#pokeballCount").textContent = itemCountArray[0];
+            document.querySelector("#masterballCount").textContent = itemCountArray[1];
+            document.querySelector("#potionCount").textContent = itemCountArray[2];
+            document.querySelector("#gPotionCount").textContent = itemCountArray[3];
+        })
+        .catch(e => console.log(e))
+    }
+
+
     //very repetitive code below
     const pokeball = document.querySelector("#pokeball")
     const pokeballDetails = document.querySelector("#pokeballDetails")
@@ -496,6 +516,7 @@ function mainFunction() {
             } else pokemonCaptureFail()
         }
     }
+
     function pokemonCaptureSucess() {
         newPokemonAdder(currentOpponent);
         bagScreen.style.display = "none";

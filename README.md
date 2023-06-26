@@ -20,11 +20,12 @@ Hello! this is my phase-1-project for flatiron school's SWE program. I set out t
 12. Capturing pokemon is now functional, and the captured pokemon will exist in captured pokemons' database.
 13. Updated gamewide statuses, no longer able to move/encounter pokemons while in bag or combat.
 14. Updated bag items buttons, now no longer able to use items unless engaged in combat, items are only usable on the currently active pokemon.
+15. Added a tracker for player items count
 
 
 
 # Deliverables to work on
-1. Add a new data set to track player items (implement fetch patch).
+1. Update the item tracker, and allow players to use items only when there is more than 0.
 2. Update the bag -> pokemon section to reflect currently captured pokemons
 
 # Stertch Deliverables
