@@ -142,15 +142,43 @@ function mainFunction() {
     //Encounter Probability Section
     function probabilityMachine() {
         let token = RNG(100)
-        if (token > 75) {
-            // const eventHistory = document.querySelector("#eventHistory")
-            const newEvent = document.createElement("p");
-            newEvent.textContent = "You just encountered a Pokemon!, combat will start in 3 seconds";
-            eventHistory.appendChild(newEvent);
+        if (token < 6) { //6 % chance 
+            //get pokeball
+            const pokeballCount = document.querySelector("#pokeballCount");
+            let newPokeballCount = parseInt(pokeballCount.textContent) + 1;
+            pokeballCount.textContent = newPokeballCount;
+            eventHistoryLogger("You found a pokeball!");
+            inventoryDataPatcher({pokeball: newPokeballCount})
+        } else if (token >= 8 && token < 10) { //2% chance
+            //get masterball
+            const masterballCount = document.querySelector("#masterballCount");
+            let newMasterballCount = parseInt(masterballCount.textContent) + 1;
+            masterballCount.textContent = newMasterballCount;
+            eventHistoryLogger("You found a masterball!");
+            inventoryDataPatcher({masterball: newMasterballCount})
+        } else if (token >= 10 && token < 20) { //10% chance
+            //get potion
+            const potionCount = document.querySelector("#potionCount");
+            let newPotionCount = parseInt(potionCount.textContent) + 1;
+            potionCount.textContent = newPotionCount;
+            eventHistoryLogger("You found a potion!");
+            inventoryDataPatcher({potion: newPotionCount})
+        } else if (token >= 20 && token < 24) { //4% chance
+            //get great potion
+            const gPotionCount = document.querySelector("#gPotionCount");
+            let newGPotionCount = parseInt(gPotionCount.textContent) + 1;
+            gPotionCount.textContent = newGPotionCount;
+            eventHistoryLogger("You found a great potion!");
+            inventoryDataPatcher({great_potion: newGPotionCount})
+        } else if (token > 75) {
+            eventHistoryLogger("You just encountered a Pokemon!, combat will start in 3 seconds");
             mockCombatStarter();
             isPlayStatus = false;
-        } else return
+        } else return;
     }
+    
+
+    
 
     //RandomNumberGenerator
     function RNG(range) {
@@ -331,9 +359,7 @@ function mainFunction() {
                     combatStatus = false; //exits combat status so that you can move the character again
                     bagScreenChange();
                 }, 3000)
-                const newEvent = document.createElement("p");
-                newEvent.textContent = `Your pokemon was defeated by the enemy ${currentOpponent.name}`
-                eventHistory.appendChild(newEvent);
+                eventHistoryLogger(`Your pokemon was defeated by the enemy ${currentOpponent.name}`)
                 combatEventLogger(`${currentAlly.name} has fainted`);
             }
         }   else return
@@ -374,9 +400,7 @@ function mainFunction() {
                     combatStatus = false; 
                     isPlayStatus = true;
                 }, 3000)
-                const newEvent = document.createElement("p");
-                newEvent.textContent = `You defeated the enemy ${currentOpponent.name}`
-                eventHistory.appendChild(newEvent);
+                eventHistoryLogger(`You defeated the enemy ${currentOpponent.name}`);
                 combatEventLogger(`${currentOpponent.name} has fainted`);
             }
         }   else return
@@ -618,13 +642,13 @@ function mainFunction() {
         combatScreen.style.display = "block";
         opponentPokemon.style.animation = "shake 0.5s";
         setTimeout(() => {
-            combatLeave(`Successfully captured the pokemon!`);
+            combatLeave(`Successfully captured the ${currentOpponent.name}!`);
             opponentPokemon.style.animation = "none";
         }, 2000)
     }
 
     function pokemonCaptureFail() {
-        combatEventLogger(`Failed to capture the pokemon`)
+        combatEventLogger(`Failed to capture the ${currentOpponent.name}`)
     }
 
     //implementing persistency 
@@ -658,6 +682,7 @@ function mainFunction() {
         const newEvent = document.createElement("p");
         newEvent.textContent = message;
         eventHistory.appendChild(newEvent);
+        eventHistory.scrollTop = eventHistory.scrollHeight;
         combatStatus = false;
         bagScreenChange();
         skillDeloader();
@@ -669,6 +694,14 @@ function mainFunction() {
         const combatEvent = document.createElement("p");
         combatEvent.textContent = message;
         combatHistory.appendChild(combatEvent);
+        combatHistory.scrollTop = combatHistory.scrollHeight;
+    }
+
+    function eventHistoryLogger(message) {
+        const addEvent = document.createElement("p");
+        addEvent.textContent = message;
+        eventHistory.appendChild(addEvent);
+        eventHistory.scrollTop = eventHistory.scrollHeight;
     }
 }
 
