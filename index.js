@@ -238,6 +238,8 @@ function mainFunction() {
         allyHP.textContent = data[i].health;
 
         skillLoader(data[i])
+
+        setTimeout(()=>activePokemonSwapperBtn(), 1000); //deactivates the swapper button
     }
 
     let currentOpponent = {};
@@ -469,10 +471,12 @@ function mainFunction() {
     //Pokemon Swapper via List buttons
     function pokemonSwapper(e) {
         skillDeloader();
+        deActivePokemonSwapperBtn();
 
         fetch(`http://localhost:3000/capturedPokemon/${e.target.id}`)
         .then(res => res.json())
         .then(data => {
+            currentAlly = data;
             const allyPokemon = document.querySelector("#allyPokemon")
             const allyHP = document.querySelector("#allyHP")
 
@@ -480,6 +484,7 @@ function mainFunction() {
             allyHP.textContent = data.health;
 
             skillLoader(data)
+            activePokemonSwapperBtn();
         })
 
         bagScreen.style.display = "none"
@@ -500,6 +505,17 @@ function mainFunction() {
                 } 
             }
         }, 1000) //add timeout so that fetch finishes before grabbing elements 
+    }
+
+    //Aditional condition for the swapperbutton 
+    function activePokemonSwapperBtn() {
+        const currentBtn = document.getElementById(`${currentAlly.id}`);
+        currentBtn.disabled = true;
+    }
+
+    function deActivePokemonSwapperBtn() {
+        const currentBtn = document.getElementById(`${currentAlly.id}`);
+        currentBtn.disabled = false;
     }
 
     //Load items count
@@ -699,13 +715,13 @@ function mainFunction() {
         }, 2000)
 
         //update pokemonlist
-        console.log(poke);
         const pokeList = document.querySelector("#pokemonList");
         const newDiv = document.createElement("div");
         const newDet = document.createElement("div");
         const newTag = document.createElement("p");
         const newImg = document.createElement("img");
         const newBtn = document.createElement("button");
+        const newSpan = document.createElement("span")
 
         newDet.textContent = poke.name;
         pokeList.appendChild(newDet);
@@ -723,8 +739,8 @@ function mainFunction() {
         newBtn.id = `${poke.id}`;
         newSpan.appendChild(newBtn)
         newTag.appendChild(newSpan);
-        newBtn.addEventListener('click', () => {
-        console.log("sawpping the pokemon");
+        newBtn.addEventListener('click', (e) => {
+            pokemonSwapper(e);
         })
 
 

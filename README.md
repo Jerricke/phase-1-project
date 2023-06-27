@@ -29,11 +29,10 @@ Hello! this is my phase-1-project for flatiron school's SWE program. I set out t
 21. Patched healing function.
 22. Health points of pokemons are now actively updated during combat and when healed.
 23. Implemented the pokemon swapping system, as well as disabling the swaps when not in combat.
-
+24. Updated combat system/pokemon list to allow swapping active pokemon during combat.
 
 # Deliverables to work on
-1. Update combat system/pokemon list to allow swapping active pokemon during combat.
-2. Update combat system to prompt user to select other pokemons when active pokemon faints.
+3. Update combat system to prompt user to select other pokemons when active pokemon faints.
 
 # Stertch Deliverables
 1. Create a game start feature where player gets to pick which pokemon to start with.
