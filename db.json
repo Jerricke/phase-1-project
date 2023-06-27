@@ -183,9 +183,9 @@
       "id": 1,
       "name": "Pikachu",
       "type": "lightning",
-      "health": 24,
+      "health": 0,
       "max_health": 24,
-      "is_fainted": false,
+      "is_fainted": true,
       "front_sprite": "./src/pokemon_images/pikachu_front.png",
       "back_sprite": "./src/pokemon_images/pikachu_back.png",
       "moves": [
@@ -215,9 +215,9 @@
       "id": 2,
       "name": "Bulbasaur",
       "type": "grass",
-      "health": 24,
+      "health": 0,
       "max_health": 24,
-      "is_fainted": false,
+      "is_fainted": true,
       "front_sprite": "./src/pokemon_images/bulbasaur_front.png",
       "back_sprite": "./src/pokemon_images/bulbasaur_back.png",
       "moves": [
@@ -279,10 +279,10 @@
   "bagItems": [
     {
       "id": 1,
-      "pokeball": 7,
-      "masterball": 2,
-      "potion": 21,
-      "great_potion": 15
+      "pokeball": 10,
+      "masterball": 4,
+      "potion": 22,
+      "great_potion": 17
     }
   ]
 }

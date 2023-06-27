@@ -209,18 +209,15 @@ function mainFunction() {
             .then(res => res.json())
             .then(data => {
                 let i = 0;
+                ifLooper();
                 function ifLooper() {
-                    if (data[i].is_fainted === true) {      //ensures that we don't load a fainted pokemon
+                    if (data[i].is_fainted) {      //ensures that we don't load a fainted pokemon
                         i = i + 1;
                         ifLooper();
                     } else return i
                 }
-                if (data[i].is_fainted === true) {      //ensures that we don't load a fainted pokemon
-                    i = i + 1;
-                    allyLoader(data, i);
-                } else {
-                    allyLoader(data, i)
-                }
+
+                allyLoader(data, i)
             })
             .catch(e => console.log(e))
     }
@@ -349,27 +346,45 @@ function mainFunction() {
                 //PATCHING FAINT STATUS
                 allyDataPatcher({health: 0})
                 allyDataPatcher({is_fainted: true})
-                document.getElementById(`${currentAlly.id}_hp`).textContent = `Hp: ${HPval}    `;
+                // document.getElementById(`${currentAlly.id}_hp`).textContent = `Hp: 0    `;
 
+                let available = false;
                 setTimeout(() => {
                     allyPokemon.src = " ";
                     document.querySelector("#allyHP").textContent = "fainted";
                     allyPokemon.style.animation = "none"
-                }, 1500)
+                    combatEventLogger(`${currentAlly.name} has fainted`);
+
+                    //check for any alive pokemons
+                    fetch("http://localhost:3000/capturedPokemon/")
+                        .then(res => res.json())
+                        .then(data => {
+                            data.forEach( pokemon => {
+                                if (!pokemon.is_fainted) {
+                                    available = true; 
+                                } else {
+                                    available = false;
+                                }
+                            })
+                        })
+                }, 600)
                 setTimeout(()=> {
-                    combatScreen.style.display = "none";
-                    mainScreen.style.display = "block";
-                    // document.querySelector("#allyPokemon").src = " ";
-                    // document.querySelector("#allyHP").textContent = " ";
-                    skillDeloader();
-                    combatHistoryClear();
-                    
-                    combatStatus = false; //exits combat status so that you can move the character again
-                    bagScreenChange();
-                    swapperButtonUpdater()
+                    if (available) {
+                        combatScreen.style.display = "none";
+                        bagScreen.style.display = "block";
+                    } else {
+                        combatScreen.style.display = "none";
+                        mainScreen.style.display = "block";
+                        // document.querySelector("#allyPokemon").src = " ";
+                        // document.querySelector("#allyHP").textContent = " ";
+                        skillDeloader();
+                        combatHistoryClear();
+                        
+                        combatStatus = false; //exits combat status so that you can move the character again
+                        bagScreenChange();
+                        swapperButtonUpdater()
+                    }
                 }, 3000)
-                eventHistoryLogger(`Your pokemon was defeated by the enemy ${currentOpponent.name}`)
-                combatEventLogger(`${currentAlly.name} has fainted`);
             }
         }   else return
     }
@@ -396,7 +411,7 @@ function mainFunction() {
                     opponentPokemon.src = " ";
                     document.querySelector("#opponentHP").textContent = "fainted";
                     opponentPokemon.style.animation = "none"
-                }, 1500)
+                }, 600)
                 setTimeout(()=> {
                     combatScreen.style.display = "none";
                     mainScreen.style.display = "block";
@@ -470,25 +485,31 @@ function mainFunction() {
 
     //Pokemon Swapper via List buttons
     function pokemonSwapper(e) {
-        skillDeloader();
-        deActivePokemonSwapperBtn();
 
         fetch(`http://localhost:3000/capturedPokemon/${e.target.id}`)
         .then(res => res.json())
         .then(data => {
-            currentAlly = data;
-            const allyPokemon = document.querySelector("#allyPokemon")
-            const allyHP = document.querySelector("#allyHP")
+            deActivePokemonSwapperBtn();
+            if (!data.is_fainted) {
+                skillDeloader();
+                currentAlly = data;
+                const allyPokemon = document.querySelector("#allyPokemon")
+                const allyHP = document.querySelector("#allyHP")
+    
+                allyPokemon.src = data.back_sprite;
+                allyHP.textContent = data.health;
+    
+                skillLoader(data)
+                activePokemonSwapperBtn();
 
-            allyPokemon.src = data.back_sprite;
-            allyHP.textContent = data.health;
-
-            skillLoader(data)
-            activePokemonSwapperBtn();
+                bagScreen.style.display = "none"
+                combatScreen.style.display = "block";
+            } else {
+                alert(`That ${data.name} has fainted`)
+                activePokemonSwapperBtn();
+            }
         })
 
-        bagScreen.style.display = "none"
-        combatScreen.style.display = "block";
     }
 
     //Updates the buttons to disabled/not disabled depending if you player is in combat
@@ -742,7 +763,7 @@ function mainFunction() {
         newBtn.addEventListener('click', (e) => {
             pokemonSwapper(e);
         })
-
+ 
 
         newDiv.style.display = "none"
         newDet.addEventListener("click", () => {

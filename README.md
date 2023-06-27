@@ -32,7 +32,9 @@ Hello! this is my phase-1-project for flatiron school's SWE program. I set out t
 24. Updated combat system/pokemon list to allow swapping active pokemon during combat.
 
 # Deliverables to work on
-3. Update combat system to prompt user to select other pokemons when active pokemon faints.
+1. Update combat system to prompt user to select other pokemons when active pokemon faints.
+2. Add music for different screens
+3. Add a button to remove pokemons from your list
 
 # Stertch Deliverables
 1. Create a game start feature where player gets to pick which pokemon to start with.
