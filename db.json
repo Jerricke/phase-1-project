@@ -328,12 +328,44 @@
         }
       ],
       "id": 5
+    },
+    {
+      "name": "Pikachu",
+      "type": "lightning",
+      "health": 24,
+      "max_health": 24,
+      "is_fainted": false,
+      "front_sprite": "./src/pokemon_images/pikachu_front.png",
+      "back_sprite": "./src/pokemon_images/pikachu_back.png",
+      "moves": [
+        {
+          "name": "thunder-punch",
+          "damage": 5,
+          "chance": 80
+        },
+        {
+          "name": "headbutt",
+          "damage": 4,
+          "chance": 95
+        },
+        {
+          "name": "thunderbolt",
+          "damage": 6,
+          "chance": 60
+        },
+        {
+          "name": "quick-attack",
+          "damage": 3,
+          "chance": 100
+        }
+      ],
+      "id": 6
     }
   ],
   "bagItems": [
     {
       "id": 1,
-      "pokeball": 8,
+      "pokeball": 7,
       "masterball": 1,
       "potion": 5,
       "great_potion": 5
