@@ -23,11 +23,12 @@ Hello! this is my phase-1-project for flatiron school's SWE program. I set out t
 15. Added a tracker for player items count
 16. Playeres can now only use items when the count is greater than 0.
 17. Implemented a working display list for captured pokemons, toggle-able to display hp and image
+18. Updated probability machine to drop items by chance
+19. Event and Combat loggers will automatically scroll to the bottom when a new event is added.
 
 # Deliverables to work on
-1. Update probability machine to drop items by chance
-2. Update combat system/pokemon list to allow swapping active pokemon during combat
-3. Update combat system to prompt user to select other pokemons when active pokemon faints
+1. Update combat system/pokemon list to allow swapping active pokemon during combat
+2. Update combat system to prompt user to select other pokemons when active pokemon faints
 
 # Stertch Deliverables
 1. Create a game start feature where player gets to pick which pokemon to start with.
@@ -35,7 +36,6 @@ Hello! this is my phase-1-project for flatiron school's SWE program. I set out t
 3. Create an evolution system for the captured pokemons
 4. Create a skill learn/unlearn system for the captured pokemons
 2. Plan out the ending for the game
-
 
 # patch
 1. after catching, reload pokemon list
