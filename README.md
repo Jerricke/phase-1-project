@@ -26,6 +26,10 @@ Hello! this is my phase-1-project for flatiron school's SWE program. I set out t
 18. Updated probability machine to drop items by chance.
 19. Event and Combat loggers will automatically scroll to the bottom when a new event is added.
 20. Patched the pokemon list to auto load the new captured pokemons.
+21. Patched healing function.
+22. Health points of pokemons are now actively updated during combat and when healed.
+23. Implemented the pokemon swapping system, as well as disabling the swaps when not in combat.
+
 
 # Deliverables to work on
 1. Update combat system/pokemon list to allow swapping active pokemon during combat.
