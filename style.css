@@ -297,6 +297,30 @@ div#bagGridBox > div > h1 {
     90% { transform: translate(1px, 2px) rotate(0deg); }
     100% { transform: translate(1px, -2px) rotate(-1deg); }
   }
+
+/* Game Over Screen */
+#gameOverContainer {
+    height: 100vh;
+    background-image: url("./src/screen_images/pokemonMainMenu.webp");
+    background-size: 25%;
+    text-align: center;
+}
+
+#gameOverContainer > h1 {
+    padding-top: 20vh;
+    font-size: 4em;
+}
+
+#gameOverContainer  p {
+    font-size: 1.5em;
+}
+
+
+#startOver {
+    padding: 1em 1em;
+    font-size: 2em;
+    border-radius: 10%;
+}
 /*
 .information-display {
     display: grid;

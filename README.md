@@ -30,18 +30,24 @@ Hello! this is my phase-1-project for flatiron school's SWE program. I set out t
 22. Health points of pokemons are now actively updated during combat and when healed.
 23. Implemented the pokemon swapping system, as well as disabling the swaps when not in combat.
 24. Updated combat system/pokemon list to allow swapping active pokemon during combat.
+25. Update combat system to prompt user to select other pokemons when active pokemon faints.
+26. Updated the combat system: when no more current pokemon faints, and no other pokemon is available, prompt the user that they lost.
+27. Created game over screen with a button to start over. Starting over resets all user data to initial data.
 
 # Deliverables to work on
-1. Update combat system to prompt user to select other pokemons when active pokemon faints.
-2. Add music for different screens
-3. Add a button to remove pokemons from your list
+1. Add music for different screens.
+
+# Deliverabl that may be added
+1. Add a button to remove pokemons from your list
 
 # Stertch Deliverables
 1. Create a game start feature where player gets to pick which pokemon to start with.
 2. Create an exp/levling system for the captured pokemons.
 3. Create an evolution system for the captured pokemons.
 4. Create a skill learn/unlearn system for the captured pokemons.
-2. Plan out the ending for the game.
 
-# patch
-none
+
+# patch bugs
+1. swap not showing up after pokemon faints
+2. after pokemon faints, the hp in pokemon list is not updating properly
+3. clear pokemon list when reseting

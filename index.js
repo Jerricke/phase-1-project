@@ -4,6 +4,7 @@ function mainFunction() {
     const mainScreen = document.getElementById("mainScreen");
     const combatScreen = document.getElementById("combatScreen");
     const mainMenuScreen = document.getElementById("mainMenuScreen");
+    const gameOverScreen = document.getElementById("gameOverScreen");
     const eventHistory = document.querySelector("#eventHistory");
     const movesList = document.querySelector("#movesList")
     let combatStatus = false;
@@ -16,6 +17,7 @@ function mainFunction() {
     bagScreen.style.display = "none";
     mainScreen.style.display = "none";
     mainMenuScreen.style.display = "block";
+    gameOverScreen.style.display = "none";
 
     document.getElementById("gameStart").addEventListener('click', () => {
         mainMenuScreen.style.display = "none"
@@ -374,13 +376,14 @@ function mainFunction() {
                         bagScreen.style.display = "block";
                     } else {
                         combatScreen.style.display = "none";
-                        mainScreen.style.display = "block";
+                        gameOverScreen.style.display = "block";
                         // document.querySelector("#allyPokemon").src = " ";
                         // document.querySelector("#allyHP").textContent = " ";
                         skillDeloader();
                         combatHistoryClear();
                         
                         combatStatus = false; //exits combat status so that you can move the character again
+                        isPlayStatus = false;
                         bagScreenChange();
                         swapperButtonUpdater()
                     }
@@ -807,6 +810,46 @@ function mainFunction() {
         })
         .catch(e => console.log(e))
     }
+
+    //Game Over! time to start over and reset all data
+    const startOver = document.querySelector("#startOver");
+    startOver.addEventListener("click", () => {
+        const length = document.querySelectorAll("#pokemonList > div").length;
+        for (let i = 2; i <= length; i ++) {
+            fetch(`http://localhost:3000/capturedPokemon/${i}`, {method: "DELETE"})
+        }
+
+        fetch("http://localhost:3000/bagItems/1", {
+            method : "PATCH",
+            headers: {
+                "Content-Type" : "application/json"
+            },
+            body: JSON.stringify({
+                "pokeball": 4,
+                "masterball": 1,
+                "potion": 5,
+                "great_potion": 2
+            })
+        })
+
+        fetch("http://localhost:3000/capturedPokemon/1", {
+            method : "PATCH",
+            headers: {
+                "Content-Type" : "application/json"
+            },
+            body: JSON.stringify({
+                "health" : 24,
+                "is_fainted" : false,
+            })
+        })
+
+        gameOverScreen.style.display = "none";
+        mainMenuScreen.style.display = "block";
+
+    })
+
+
+
 
     //creating Re-Usable functions
     function combatLeave(message) {
