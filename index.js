@@ -8,7 +8,9 @@ function mainFunction() {
     const movesList = document.querySelector("#movesList")
     let combatStatus = false;
     let isPlayStatus = false;
+    pokemonListLoader();
     bagScreenChange();
+    swapperButtonUpdater();
 
     combatScreen.style.display = "none";
     bagScreen.style.display = "none";
@@ -170,7 +172,7 @@ function mainFunction() {
             gPotionCount.textContent = newGPotionCount;
             eventHistoryLogger("You found a great potion!");
             inventoryDataPatcher({great_potion: newGPotionCount})
-        } else if (token > 75) {
+        } else if (token > 75) { //25% chance to encounter
             eventHistoryLogger("You just encountered a Pokemon!, combat will start in 3 seconds");
             mockCombatStarter();
             isPlayStatus = false;
@@ -194,6 +196,7 @@ function mainFunction() {
         }, 3000)
         combatStatus = true;
         bagScreenChange();
+        swapperButtonUpdater()
         
         //Load encounter pokemon
         fetch("http://localhost:3000/pokemon/")
@@ -221,6 +224,7 @@ function mainFunction() {
             })
             .catch(e => console.log(e))
     }
+
     //POKEMON COMBAT FUNCTION
 
     let currentAlly = {};
@@ -331,6 +335,7 @@ function mainFunction() {
 
                 //PATCHING HP DATA
                 allyDataPatcher({health: HPval})
+                document.getElementById(`${currentAlly.id}_hp`).textContent = `Hp: ${HPval}    `;
 
                 combatEventLogger(`Enemy ${currentOpponent.name} used ${skill.name} and dealt ${damage} damage`);
 
@@ -342,6 +347,7 @@ function mainFunction() {
                 //PATCHING FAINT STATUS
                 allyDataPatcher({health: 0})
                 allyDataPatcher({is_fainted: true})
+                document.getElementById(`${currentAlly.id}_hp`).textContent = `Hp: ${HPval}    `;
 
                 setTimeout(() => {
                     allyPokemon.src = " ";
@@ -358,6 +364,7 @@ function mainFunction() {
                     
                     combatStatus = false; //exits combat status so that you can move the character again
                     bagScreenChange();
+                    swapperButtonUpdater()
                 }, 3000)
                 eventHistoryLogger(`Your pokemon was defeated by the enemy ${currentOpponent.name}`)
                 combatEventLogger(`${currentAlly.name} has fainted`);
@@ -396,6 +403,7 @@ function mainFunction() {
                     skillDeloader();
                     combatHistoryClear();
                     bagScreenChange();
+                    swapperButtonUpdater()
                     allyDataPatcher({health: parseInt(document.querySelector("#allyHP").textContent)});
                     combatStatus = false; 
                     isPlayStatus = true;
@@ -409,7 +417,6 @@ function mainFunction() {
     //Bag Screen function codes
 
     //Load pokemon list
-    pokemonListLoader();
     function pokemonListLoader() {
         fetch("http://localhost:3000/capturedPokemon/")
         .then(res => res.json())
@@ -420,6 +427,8 @@ function mainFunction() {
                 const newDet = document.createElement("div");
                 const newTag = document.createElement("p");
                 const newImg = document.createElement("img");
+                const newBtn = document.createElement("button");
+                const newSpan = document.createElement("span");
 
                 newDet.textContent = poke.name;
                 pokeList.appendChild(newDet);
@@ -429,8 +438,17 @@ function mainFunction() {
                 newImg.src = poke.front_sprite;
                 newDiv.appendChild(newImg)
 
-                newTag.textContent = `Hp: ${poke.health}`;
+                newTag.textContent = `Hp: ${poke.health}    `;
+                newTag.id = `${poke.id}_hp`
                 newDiv.appendChild(newTag);
+
+                newBtn.textContent = "Swap";
+                newBtn.id = `${poke.id}`;
+                newSpan.appendChild(newBtn)
+                newTag.appendChild(newSpan);
+                newBtn.addEventListener('click', (e) => {
+                    pokemonSwapper(e);
+                })
 
                 newDiv.style.display = "none"
                 newDet.addEventListener("click", () => {
@@ -446,6 +464,42 @@ function mainFunction() {
             })
         })
         .catch(e => console.log(e))
+    }
+
+    //Pokemon Swapper via List buttons
+    function pokemonSwapper(e) {
+        skillDeloader();
+
+        fetch(`http://localhost:3000/capturedPokemon/${e.target.id}`)
+        .then(res => res.json())
+        .then(data => {
+            const allyPokemon = document.querySelector("#allyPokemon")
+            const allyHP = document.querySelector("#allyHP")
+
+            allyPokemon.src = data.back_sprite;
+            allyHP.textContent = data.health;
+
+            skillLoader(data)
+        })
+
+        bagScreen.style.display = "none"
+        combatScreen.style.display = "block";
+    }
+
+    //Updates the buttons to disabled/not disabled depending if you player is in combat
+    function swapperButtonUpdater() {
+        setTimeout( () => {
+            const swapperBtn = document.querySelectorAll("p span button");
+            if (!combatStatus) {
+                for (let index =0; index < swapperBtn.length; index++) {
+                    swapperBtn[index].disabled = true; 
+                } 
+            } else {
+                for (let index = 0; index < swapperBtn.length; index++) {
+                    swapperBtn[index].disabled = false; 
+                } 
+            }
+        }, 1000) //add timeout so that fetch finishes before grabbing elements 
     }
 
     //Load items count
@@ -578,15 +632,15 @@ function mainFunction() {
         const allyHP = document.querySelector("#allyHP");
         newHP = parseInt(allyHP.textContent) + healing;
         if (newHP > currentAlly.max_health) {
-            allyHP.textContent = currentAlly.max_health;
-            console.log("regular heal");
+            newHP = currentAlly.max_health;
+            allyHP.textContent = newHP;
         } else {
             allyHP.textContent = newHP;   
-            console.log("healed to max");
         }
 
         //PATCHING HP DATA
         allyDataPatcher({health: newHP})
+        document.getElementById(`${currentAlly.id}_hp`).textContent = `Hp: ${newHP}    `;
     }
 
     //Pokemon Capturing 
@@ -624,7 +678,6 @@ function mainFunction() {
             }
         } 
 
-
     function inventoryDataPatcher(item) {
         fetch(`http://localhost:3000/bagItems/1`, {
             method: "PATCH",
@@ -652,6 +705,7 @@ function mainFunction() {
         const newDet = document.createElement("div");
         const newTag = document.createElement("p");
         const newImg = document.createElement("img");
+        const newBtn = document.createElement("button");
 
         newDet.textContent = poke.name;
         pokeList.appendChild(newDet);
@@ -661,8 +715,18 @@ function mainFunction() {
         newImg.src = poke.front_sprite;
         newDiv.appendChild(newImg)
 
-        newTag.textContent = `Hp: ${poke.health}`;
+        newTag.textContent = `Hp: ${poke.health}    `;
+        newTag.id = `${poke.id}_hp`
         newDiv.appendChild(newTag);
+
+        newBtn.textContent = "Swap";
+        newBtn.id = `${poke.id}`;
+        newSpan.appendChild(newBtn)
+        newTag.appendChild(newSpan);
+        newBtn.addEventListener('click', () => {
+        console.log("sawpping the pokemon");
+        })
+
 
         newDiv.style.display = "none"
         newDet.addEventListener("click", () => {
@@ -717,6 +781,7 @@ function mainFunction() {
         eventHistory.scrollTop = eventHistory.scrollHeight;
         combatStatus = false;
         bagScreenChange();
+        swapperButtonUpdater()
         skillDeloader();
         combatHistoryClear();
         isPlayStatus = true;
