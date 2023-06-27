@@ -615,11 +615,11 @@ function mainFunction() {
     function pokemonCapture(rate) {
             if (currentOpponent.health > 5 ) {
                 if (RNG(100) < rate) {
-                    pokemonCaptureSucess()
+                    pokemonCaptureSucess(currentOpponent)
                 } else pokemonCaptureFail()
             } else {
                 if (RNG(100) < rate*2) {
-                    pokemonCaptureSucess()
+                    pokemonCaptureSucess(currentOpponent)
                 } else pokemonCaptureFail()
             }
         } 
@@ -636,15 +636,47 @@ function mainFunction() {
         .catch(e => console.log(e));
     }
 
-    function pokemonCaptureSucess() {
-        newPokemonAdder(currentOpponent);
+    function pokemonCaptureSucess(poke) {
         bagScreen.style.display = "none";
         combatScreen.style.display = "block";
         opponentPokemon.style.animation = "shake 0.5s";
         setTimeout(() => {
-            combatLeave(`Successfully captured the ${currentOpponent.name}!`);
+            combatLeave(`Successfully captured the ${poke.name}!`);
             opponentPokemon.style.animation = "none";
         }, 2000)
+
+        //update pokemonlist
+        console.log(poke);
+        const pokeList = document.querySelector("#pokemonList");
+        const newDiv = document.createElement("div");
+        const newDet = document.createElement("div");
+        const newTag = document.createElement("p");
+        const newImg = document.createElement("img");
+
+        newDet.textContent = poke.name;
+        pokeList.appendChild(newDet);
+
+        newDet.appendChild(newDiv);
+
+        newImg.src = poke.front_sprite;
+        newDiv.appendChild(newImg)
+
+        newTag.textContent = `Hp: ${poke.health}`;
+        newDiv.appendChild(newTag);
+
+        newDiv.style.display = "none"
+        newDet.addEventListener("click", () => {
+            let toggle = newDiv.style.display;
+            if (toggle === "none"){
+                newDiv.style.display = "block";
+                toggle = "block";
+            } else {
+                newDiv.style.display = "none";
+                toggle = "none"
+            }
+        })
+
+        newPokemonAdder(currentOpponent);
     }
 
     function pokemonCaptureFail() {
