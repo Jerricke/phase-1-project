@@ -2,40 +2,41 @@
 Hello! this is my phase-1-project for flatiron school's SWE program. I set out to create a pokemon game using only HTML/CSS/JS (one html file). 
 
 # Timeline of Codes 
-1. Focused on the creation of the main play screen 
-2. Created of the coordinate system and the addition of the encounter mechanism based on RNG
-3. Added the console menu at the bottom of the play screen
-4. Created the Main Menu Screen and Bag Screens
-5. Created a CombatScreen for when an encounter occurs
-6. Added global settings to disable coordinate movement while in combat
+1. Focused on the creation of the main play screen .
+2. Created of the coordinate system and the addition of the encounter mechanism based on RNG.
+3. Added the console menu at the bottom of the play screen.
+4. Created the Main Menu Screen and Bag Screens.
+5. Created a CombatScreen for when an encounter occurs.
+6. Added global settings to disable coordinate movement while in combat.
 7. Implemented combat system: 
-    -> Player will be able to use one of the skills and inflict damage to the opponent pokemon
-    -> There is a %chance the skill will hit/miss, and there is also a base crit rate of 15% at 2x crit dmg
-    -> When either pokemon faints, they will shake and disappear 
-8. Implemented the battle turn base system
-    -> Basically allows the enemy pokemon to attack currnet ally pokemon after each player move
-9. Implemented the items functionalities in the bag screen
-10. Implemented the use function for the potions 
+    -> Player will be able to use one of the skills and inflict damage to the opponent pokemon.
+    -> There is a %chance the skill will hit/miss, and there is also a base crit rate of 15% at 2x crit dmg.
+    -> When either pokemon faints, they will shake and disappear .
+8. Implemented the battle turn base system.
+    -> Basically allows the enemy pokemon to attack currnet ally pokemon after each player move.
+9. Implemented the items functionalities in the bag screen.
+10. Implemented the use function for the potions .
 11. Implemented fetch patch for the hp updates on ally pokemon, hp now persists through combats.
 12. Capturing pokemon is now functional, and the captured pokemon will exist in captured pokemons' database.
 13. Updated gamewide statuses, no longer able to move/encounter pokemons while in bag or combat.
 14. Updated bag items buttons, now no longer able to use items unless engaged in combat, items are only usable on the currently active pokemon.
-15. Added a tracker for player items count
+15. Added a tracker for player items count.
 16. Playeres can now only use items when the count is greater than 0.
-17. Implemented a working display list for captured pokemons, toggle-able to display hp and image
-18. Updated probability machine to drop items by chance
+17. Implemented a working display list for captured pokemons, toggle-able to display hp and image.
+18. Updated probability machine to drop items by chance.
 19. Event and Combat loggers will automatically scroll to the bottom when a new event is added.
+20. Patched the pokemon list to auto load the new captured pokemons.
 
 # Deliverables to work on
-1. Update combat system/pokemon list to allow swapping active pokemon during combat
-2. Update combat system to prompt user to select other pokemons when active pokemon faints
+1. Update combat system/pokemon list to allow swapping active pokemon during combat.
+2. Update combat system to prompt user to select other pokemons when active pokemon faints.
 
 # Stertch Deliverables
 1. Create a game start feature where player gets to pick which pokemon to start with.
-2. Create an exp/levling system for the captured pokemons
-3. Create an evolution system for the captured pokemons
-4. Create a skill learn/unlearn system for the captured pokemons
-2. Plan out the ending for the game
+2. Create an exp/levling system for the captured pokemons.
+3. Create an evolution system for the captured pokemons.
+4. Create a skill learn/unlearn system for the captured pokemons.
+2. Plan out the ending for the game.
 
 # patch
-1. after catching, reload pokemon list
+none
