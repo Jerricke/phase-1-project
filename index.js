@@ -50,6 +50,10 @@ function mainFunction() {
     document.querySelector("#bagBtn").addEventListener('click', () => {
          combatScreen.style.display = "none";
          bagScreen.style.display = "block"
+
+        pokemonListDeLoader();
+        pokemonListLoader();
+        swapperButtonUpdater();
     })
  
     document.querySelector("#escapeBtn").addEventListener('click', () => {
@@ -335,7 +339,6 @@ function mainFunction() {
                 allyHP.textContent = HPval
                 //PATCHING HP DATA
                 allyDataPatcher({health: HPval})
-                document.getElementById(`${currentAlly.id}_hp`).textContent = `Hp: ${HPval}    `;
 
                 combatEventLogger(`Enemy ${currentOpponent.name} used ${skill.name} and dealt ${damage} damage`);
 
@@ -346,7 +349,6 @@ function mainFunction() {
                 //PATCHING FAINT STATUS
                 allyDataPatcher({health: 0})
                 allyDataPatcher({is_fainted: true})
-                document.getElementById(`${currentAlly.id}_hp`).textContent = `Hp: 0    `;
 
                 const newTag = document.getElementById(`${currentAlly.id}_hp`);
                 const newBtn = document.createElement("button");
@@ -359,8 +361,7 @@ function mainFunction() {
                     pokemonSwapper(e);
                 })
 
-
-                let tempArray = [];
+                let available = false;
                 setTimeout(() => {
                     allyPokemon.src = " ";
                     document.querySelector("#allyHP").textContent = "fainted";
@@ -381,19 +382,14 @@ function mainFunction() {
                         catch {
                             return available = true
                         }
-
-                            // data.every( test => {
-                            //     console.log(test.is_fainted);
-                            //     if (test.is_fainted === false) {
-                            //         console.log(test.is_fainted);
-                            //         return available = true
-                            //     } else {available = false}
-                            // })
-                        })
+                    })
                     setTimeout(()=> {
                         if (available) {
                             combatScreen.style.display = "none";
                             bagScreen.style.display = "block";
+                            pokemonListDeLoader();
+                            pokemonListLoader();
+                            swapperButtonUpdater();
                         } else {
                             combatScreen.style.display = "none";
                             gameOverScreen.style.display = "block";
@@ -506,6 +502,13 @@ function mainFunction() {
             })
         })
         .catch(e => console.log(e))
+    }
+
+    function pokemonListDeLoader() {   
+        const pokemonList = document.querySelector("#pokemonList")
+        while (pokemonList.firstChild){
+            pokemonList.removeChild(pokemonList.firstChild);
+        }
     }
 
     //Pokemon Swapper via List buttons
@@ -865,6 +868,18 @@ function mainFunction() {
             })
         })
 
+        setTimeout( () => {
+            pokemonListDeLoader();
+            pokemonListLoader();
+            fetch("http://localhost:3000/bagItems/1")
+                .then(res => res.json())
+                .then(data => {
+                    document.querySelector("#potionCount").textContent = data.potion;
+                    document.querySelector("#gPotionCount").textContent = data.great_potion;
+                    document.querySelector("#pokeballCount").textContent = data.pokeball;
+                    document.querySelector("#masterballCount").textContent = data.masterball;
+                })
+        }, 500)
         gameOverScreen.style.display = "none";
         mainMenuScreen.style.display = "block";
 
@@ -877,15 +892,12 @@ function mainFunction() {
     function combatLeave(message) {
         combatScreen.style.display = "none";
         mainScreen.style.display = "block"
-        const newEvent = document.createElement("p");
-        newEvent.textContent = message;
-        eventHistory.appendChild(newEvent);
-        eventHistory.scrollTop = eventHistory.scrollHeight;
-        combatStatus = false;
+        eventHistoryLogger(message)
         bagScreenChange();
         swapperButtonUpdater()
         skillDeloader();
         combatHistoryClear();
+        combatStatus = false;
         isPlayStatus = true;
     }
 

@@ -34,11 +34,15 @@ Hello! this is my phase-1-project for flatiron school's SWE program. I set out t
 26. Updated the combat system: when no more current pokemon faints, and no other pokemon is available, prompt the user that they lost.
 27. Created game over screen with a button to start over. Starting over resets all user data to initial data.
 28. Patched game over function bug, now properly ends game ONLY if no pokemon is available.
+29. Patched bug, pokemon swap was not showing up after pokemon faints.
+30. Patched bug, pokemon list now updates properly when pokemon faints.
+31. Patched bug, pokemon swap now works with newly captured pokemons.
+32. Patched bug, item and pokemon list now reloads with initial data.
 
 # Deliverables to work on
 1. Add music for different screens.
 
-# Deliverabl that may be added
+# Deliverables that may be added
 1. Add a button to remove pokemons from your list
 
 # Stertch Deliverables
@@ -49,7 +53,4 @@ Hello! this is my phase-1-project for flatiron school's SWE program. I set out t
 
 
 # patch bugs
-1. swap not showing up after pokemon faints
-2. after pokemon faints, the hp in pokemon list is not updating properly
-3. clear pokemon list when reseting
-4. fix pokemon swap with newly captured pokemons
+
