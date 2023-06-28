@@ -39,10 +39,10 @@ Hello! this is my phase-1-project for flatiron school's SWE program. I set out t
 31. Patched bug, pokemon swap now works with newly captured pokemons.
 32. Patched bug, item and pokemon list now reloads with initial data.
 33. Added features: an arrow in the pokemon list to indicate current active pokemon, red texts for fainted pokemons.
+34. Added music for the game.
 
 
 # Deliverables to work on
-1. Add music for different screens.
 
 # Deliverables that may be added
 1. Add a button to remove pokemons from your list

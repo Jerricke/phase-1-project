@@ -9,10 +9,22 @@ function mainFunction() {
     const movesList = document.querySelector("#movesList")
     let combatStatus = false;
     let isPlayStatus = false;
+    const MMAudio = new Audio("./src/audio_files/Opening.mp3");
+    MMAudio.loop = true;
+    const gameAudio = new Audio("./src/audio_files/Road.mp3");
+    gameAudio.loop = true;
+    const combatAudio = new Audio("./src/audio_files/Battle.mp3");
+    combatAudio.loop = true;
+    const victoryAudio = new Audio("./src/audio_files/Victory.mp3");
+    const endingAudio = new Audio("./src/audio_files/Ending.mp3")
+
+
     pokemonListLoader();
     bagScreenChange();
     swapperButtonUpdater();
 
+    MMAudio.currentTime = 13;
+    MMAudio.play();
     combatScreen.style.display = "none";
     bagScreen.style.display = "none";
     mainScreen.style.display = "none";
@@ -23,6 +35,10 @@ function mainFunction() {
         mainMenuScreen.style.display = "none"
         mainScreen.style.display = "block";
         isPlayStatus = true;
+
+        MMAudio.pause();
+        gameAudio.currentTime = 0;
+        gameAudio.play();
     })
 
     document.getElementById("bag").addEventListener('click', () => {
@@ -34,6 +50,10 @@ function mainFunction() {
     document.getElementById("main-menu").addEventListener('click', () =>{
         mainScreen.style.display = "none";
         mainMenuScreen.style.display = "block";
+
+        gameAudio.pause();
+        MMAudio.currentTime = 13;
+        MMAudio.play();
     })
 
     document.getElementById("returnToMain").addEventListener('click', () => {
@@ -63,6 +83,10 @@ function mainFunction() {
  
     document.querySelector("#escapeBtn").addEventListener('click', () => {
          combatLeave("You escaped the Pokemon!");
+
+         combatAudio.pause();
+         gameAudio.currentTime = 0;
+         gameAudio.play();
     })
 
     //Generating the play area
@@ -187,6 +211,11 @@ function mainFunction() {
             eventHistoryLogger("You just encountered a Pokemon!, combat will start in 3 seconds");
             mockCombatStarter();
             isPlayStatus = false;
+
+            combatAudio.currentTime = 1;
+            combatAudio.play();
+            gameAudio.pause();
+
         } else return;
     }
     
@@ -396,6 +425,10 @@ function mainFunction() {
                             pokemonListLoader();
                             swapperButtonUpdater();
                         } else {
+                            endingAudio.currentTime = 0;
+                            endingAudio.play();
+                            combatAudio.pause();
+
                             combatScreen.style.display = "none";
                             gameOverScreen.style.display = "block";
                             // document.querySelector("#allyPokemon").src = " ";
@@ -450,9 +483,17 @@ function mainFunction() {
                     allyDataPatcher({health: parseInt(document.querySelector("#allyHP").textContent)});
                     combatStatus = false; 
                     isPlayStatus = true;
+
+                    victoryAudio.pause();
+                    gameAudio.currentTime = 0;
+                    gameAudio.play();
                 }, 3000)
                 eventHistoryLogger(`You defeated the enemy ${currentOpponent.name}`);
                 combatEventLogger(`${currentOpponent.name} has fainted`);
+
+                victoryAudio.currentTime = 1;
+                victoryAudio.play();
+                combatAudio.pause();
             }
         }   else return
     }
@@ -889,6 +930,11 @@ function mainFunction() {
                     document.querySelector("#masterballCount").textContent = data.masterball;
                 })
         }, 500)
+        
+        MMAudio.currentTime = 13;
+        MMAudio.play();
+        endingAudio.pause();
+        
         gameOverScreen.style.display = "none";
         mainMenuScreen.style.display = "block";
 
