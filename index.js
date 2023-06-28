@@ -7,6 +7,7 @@ function mainFunction() {
     const gameOverScreen = document.getElementById("gameOverScreen");
     const eventHistory = document.querySelector("#eventHistory");
     const movesList = document.querySelector("#movesList")
+    const starterDiv = document.querySelector("#starterPokemons");
     let combatStatus = false;
     let isPlayStatus = false;
     const MMAudio = new Audio("./src/audio_files/Opening.mp3");
@@ -16,8 +17,7 @@ function mainFunction() {
     const combatAudio = new Audio("./src/audio_files/Battle.mp3");
     combatAudio.loop = true;
     const victoryAudio = new Audio("./src/audio_files/Victory.mp3");
-    const endingAudio = new Audio("./src/audio_files/Ending.mp3")
-
+    const endingAudio = new Audio("./src/audio_files/Ending.mp3");
 
     pokemonListLoader();
     bagScreenChange();
@@ -25,20 +25,45 @@ function mainFunction() {
 
     MMAudio.currentTime = 13;
     MMAudio.play();
+
     combatScreen.style.display = "none";
     bagScreen.style.display = "none";
     mainScreen.style.display = "none";
     mainMenuScreen.style.display = "block";
     gameOverScreen.style.display = "none";
+    starterDiv.style.display = "none";
+
+    document.getElementById("gameContinue").addEventListener('click', () => {
+        fetch("http://localhost:3000/capturedPokemon")
+            .then(res => res.json())
+            .then(data => {
+                if (data.length !== 0) {
+                    loadGameScreen();
+                } else alert("Please start new game!")
+            })
+    })
+
+    document.getElementById("resetGame").addEventListener("dblclick", () => {
+        const length = document.querySelectorAll("#pokemonList > div").length;
+        for (let i = 1; i <= length; i ++) {  //changed from 2->1
+            fetch(`http://localhost:3000/capturedPokemon/${i}`, {method: "DELETE"}) 
+        }
+        alert("Your game has been reset!")
+    })
 
     document.getElementById("gameStart").addEventListener('click', () => {
-        mainMenuScreen.style.display = "none"
-        mainScreen.style.display = "block";
-        isPlayStatus = true;
-
-        MMAudio.pause();
-        gameAudio.currentTime = 0;
-        gameAudio.play();
+        fetch("http://localhost:3000/capturedPokemon")
+            .then(res => res.json())
+            .then(data => {
+                if (data.length == 0) {
+                    let cond = starterDiv.style.display;
+                    if (cond === "none") {
+                        starterDiv.style.display = "block";
+                    } else {
+                        starterDiv.style.display = "none";
+                    }
+                } else alert("Please reset the game first")
+            })
     })
 
     document.getElementById("bag").addEventListener('click', () => {
@@ -89,6 +114,63 @@ function mainFunction() {
          gameAudio.play();
     })
 
+    //Selecting starter pokemon
+    document.querySelector("#charmanderStart").addEventListener('click', () => {
+        fetch("http://localhost:3000/pokemon/1")
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                starterPokemonPost(data)
+            })
+            .catch(e => console.log(e))
+            starterDiv.style.display = "none"
+    })
+    document.querySelector("#squirtleStart").addEventListener('click', () => {
+        fetch("http://localhost:3000/pokemon/7")
+            .then(res => res.json())
+            .then(data => {
+                starterPokemonPost(data)
+            })
+            .catch(e => console.log(e))
+            starterDiv.style.display = "none"
+    })
+    document.querySelector("#bulbasaurStart").addEventListener('click', () => {
+        fetch("http://localhost:3000/pokemon/3")
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                starterPokemonPost(data)
+            })
+            .catch(e => console.log(e))
+            starterDiv.style.display = "none"
+    })
+
+    function starterPokemonPost(data) {
+        delete data.id;
+        fetch("http://localhost:3000/capturedPokemon", {
+            method: "POST",
+            headers: {
+                "Content-Type" : "application/json"
+            },
+            body: JSON.stringify(data)
+        }).catch(e => console.log(e))
+
+        setTimeout(()=> {loadGameScreen()}, 300);
+    }
+
+    function loadGameScreen(){
+    mainMenuScreen.style.display = "none"
+    mainScreen.style.display = "block";
+    isPlayStatus = true;
+    MMAudio.pause();
+    gameAudio.currentTime = 0;
+    gameAudio.play();
+
+    pokemonListDeLoader();
+    pokemonListLoader();
+    bagScreenChange();
+    swapperButtonUpdater();
+    }
     //Generating the play area
     serverCoordinateSystem();
     function serverCoordinateSystem() {
@@ -175,6 +257,7 @@ function mainFunction() {
             coordsDiv.classList.remove("currentPosition")
         }
     }
+    
     
     //Encounter Probability Section
     function probabilityMachine() {
@@ -890,8 +973,8 @@ function mainFunction() {
     const startOver = document.querySelector("#startOver");
     startOver.addEventListener("click", () => {
         const length = document.querySelectorAll("#pokemonList > div").length;
-        for (let i = 2; i <= length; i ++) {
-            fetch(`http://localhost:3000/capturedPokemon/${i}`, {method: "DELETE"})
+        for (let i = 1; i <= length; i ++) {  //changed from 2->1
+            fetch(`http://localhost:3000/capturedPokemon/${i}`, {method: "DELETE"}) 
         }
 
         fetch("http://localhost:3000/bagItems/1", {
@@ -907,16 +990,16 @@ function mainFunction() {
             })
         })
 
-        fetch("http://localhost:3000/capturedPokemon/1", {
-            method : "PATCH",
-            headers: {
-                "Content-Type" : "application/json"
-            },
-            body: JSON.stringify({
-                "health" : 24,
-                "is_fainted" : false,
-            })
-        })
+        // fetch("http://localhost:3000/capturedPokemon/1", {
+        //     method : "PATCH",
+        //     headers: {
+        //         "Content-Type" : "application/json"
+        //     },
+        //     body: JSON.stringify({
+        //         "health" : 24,
+        //         "is_fainted" : false,
+        //     })
+        // })
 
         setTimeout( () => {
             pokemonListDeLoader();
@@ -930,7 +1013,7 @@ function mainFunction() {
                     document.querySelector("#masterballCount").textContent = data.masterball;
                 })
         }, 500)
-        
+
         MMAudio.currentTime = 13;
         MMAudio.play();
         endingAudio.pause();
@@ -971,4 +1054,4 @@ function mainFunction() {
     }
 }
 
-document.addEventListener("DOMContentLoaded", mainFunction())
+document.addEventListener("DOMContentLoaded", mainFunction());

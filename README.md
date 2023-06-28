@@ -40,7 +40,10 @@ Hello! this is my phase-1-project for flatiron school's SWE program. I set out t
 32. Patched bug, item and pokemon list now reloads with initial data.
 33. Added features: an arrow in the pokemon list to indicate current active pokemon, red texts for fainted pokemons.
 34. Added music for the game.
+35. Patched/polished main menu, players can only continue if they have a captured pokemon.
 
+# Stretch Deliverables Added
+1. Updated main menu, user is now able to select starting pokemon after reseting the game.
 
 # Deliverables to work on
 
@@ -48,10 +51,9 @@ Hello! this is my phase-1-project for flatiron school's SWE program. I set out t
 1. Add a button to remove pokemons from your list
 
 # Stertch Deliverables
-1. Create a game start feature where player gets to pick which pokemon to start with.
-2. Create an exp/levling system for the captured pokemons.
-3. Create an evolution system for the captured pokemons.
-4. Create a skill learn/unlearn system for the captured pokemons.
+1. Create an exp/levling system for the captured pokemons.
+2. Create an evolution system for the captured pokemons.
+3. Create a skill learn/unlearn system for the captured pokemons.
 
 
 # patch bugs
