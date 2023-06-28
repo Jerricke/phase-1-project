@@ -333,7 +333,6 @@ function mainFunction() {
             HPval = HPval - damage;
             if (HPval > 0) { //if ally HP after taking damage is not 0 or less, return the attack event
                 allyHP.textContent = HPval
-
                 //PATCHING HP DATA
                 allyDataPatcher({health: HPval})
                 document.getElementById(`${currentAlly.id}_hp`).textContent = `Hp: ${HPval}    `;
@@ -343,51 +342,74 @@ function mainFunction() {
             }   else { //if ally is dead, indicate death, and also return back to the main play screen
                 const allyPokemon = document.querySelector("#allyPokemon")
                 allyPokemon.style.animation = "shake 0.5s";
-                allyHP.textContent = 0;
-
+                // allyHP.textContent = 0;
                 //PATCHING FAINT STATUS
                 allyDataPatcher({health: 0})
                 allyDataPatcher({is_fainted: true})
-                // document.getElementById(`${currentAlly.id}_hp`).textContent = `Hp: 0    `;
+                document.getElementById(`${currentAlly.id}_hp`).textContent = `Hp: 0    `;
 
-                let available = false;
+                const newTag = document.getElementById(`${currentAlly.id}_hp`);
+                const newBtn = document.createElement("button");
+                const newdiv = document.createElement("div");
+                newBtn.textContent = "Swap";
+                newBtn.id = `${currentAlly.id}`;
+                newdiv.appendChild(newBtn)
+                newTag.appendChild(newdiv);
+                newBtn.addEventListener('click', (e) => {
+                    pokemonSwapper(e);
+                })
+
+
+                let tempArray = [];
                 setTimeout(() => {
                     allyPokemon.src = " ";
                     document.querySelector("#allyHP").textContent = "fainted";
                     allyPokemon.style.animation = "none"
                     combatEventLogger(`${currentAlly.name} has fainted`);
-
+                    
                     //check for any alive pokemons
                     fetch("http://localhost:3000/capturedPokemon/")
                         .then(res => res.json())
                         .then(data => {
+                            try {
                             data.forEach( pokemon => {
                                 if (!pokemon.is_fainted) {
-                                    available = true; 
-                                } else {
-                                    available = false;
+                                    throw new Error("found a pokemon, exiting forEach")
                                 }
                             })
+                        }
+                        catch {
+                            return available = true
+                        }
+
+                            // data.every( test => {
+                            //     console.log(test.is_fainted);
+                            //     if (test.is_fainted === false) {
+                            //         console.log(test.is_fainted);
+                            //         return available = true
+                            //     } else {available = false}
+                            // })
                         })
+                    setTimeout(()=> {
+                        if (available) {
+                            combatScreen.style.display = "none";
+                            bagScreen.style.display = "block";
+                        } else {
+                            combatScreen.style.display = "none";
+                            gameOverScreen.style.display = "block";
+                            // document.querySelector("#allyPokemon").src = " ";
+                            // document.querySelector("#allyHP").textContent = " ";
+                            skillDeloader();
+                            combatHistoryClear();
+                            
+                            combatStatus = false; //exits combat status so that you can move the character again
+                            isPlayStatus = false;
+                            bagScreenChange();
+                            swapperButtonUpdater()
+                        }
+                    }, 2400)
                 }, 600)
-                setTimeout(()=> {
-                    if (available) {
-                        combatScreen.style.display = "none";
-                        bagScreen.style.display = "block";
-                    } else {
-                        combatScreen.style.display = "none";
-                        gameOverScreen.style.display = "block";
-                        // document.querySelector("#allyPokemon").src = " ";
-                        // document.querySelector("#allyHP").textContent = " ";
-                        skillDeloader();
-                        combatHistoryClear();
-                        
-                        combatStatus = false; //exits combat status so that you can move the character again
-                        isPlayStatus = false;
-                        bagScreenChange();
-                        swapperButtonUpdater()
-                    }
-                }, 3000)
+
             }
         }   else return
     }
@@ -448,7 +470,7 @@ function mainFunction() {
                 const newTag = document.createElement("p");
                 const newImg = document.createElement("img");
                 const newBtn = document.createElement("button");
-                const newSpan = document.createElement("span");
+                const newdiv = document.createElement("div");
 
                 newDet.textContent = poke.name;
                 pokeList.appendChild(newDet);
@@ -464,8 +486,8 @@ function mainFunction() {
 
                 newBtn.textContent = "Swap";
                 newBtn.id = `${poke.id}`;
-                newSpan.appendChild(newBtn)
-                newTag.appendChild(newSpan);
+                newdiv.appendChild(newBtn)
+                newTag.appendChild(newdiv);
                 newBtn.addEventListener('click', (e) => {
                     pokemonSwapper(e);
                 })
@@ -518,9 +540,9 @@ function mainFunction() {
     //Updates the buttons to disabled/not disabled depending if you player is in combat
     function swapperButtonUpdater() {
         setTimeout( () => {
-            const swapperBtn = document.querySelectorAll("p span button");
+            const swapperBtn = document.querySelectorAll("p div button");
             if (!combatStatus) {
-                for (let index =0; index < swapperBtn.length; index++) {
+                for (let index = 0; index < swapperBtn.length; index++) {
                     swapperBtn[index].disabled = true; 
                 } 
             } else {
@@ -745,7 +767,7 @@ function mainFunction() {
         const newTag = document.createElement("p");
         const newImg = document.createElement("img");
         const newBtn = document.createElement("button");
-        const newSpan = document.createElement("span")
+        const newdiv = document.createElement("div")
 
         newDet.textContent = poke.name;
         pokeList.appendChild(newDet);
@@ -761,8 +783,8 @@ function mainFunction() {
 
         newBtn.textContent = "Swap";
         newBtn.id = `${poke.id}`;
-        newSpan.appendChild(newBtn)
-        newTag.appendChild(newSpan);
+        newdiv.appendChild(newBtn)
+        newTag.appendChild(newdiv);
         newBtn.addEventListener('click', (e) => {
             pokemonSwapper(e);
         })
