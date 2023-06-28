@@ -48,12 +48,17 @@ function mainFunction() {
     })
  
     document.querySelector("#bagBtn").addEventListener('click', () => {
-         combatScreen.style.display = "none";
-         bagScreen.style.display = "block"
-
         pokemonListDeLoader();
         pokemonListLoader();
         swapperButtonUpdater();
+        
+        //currentpokemon selector
+        setTimeout( () => {
+            combatScreen.style.display = "none";
+            bagScreen.style.display = "block"
+            let arrayOfPokemon = document.querySelectorAll("#pokemonList > div")
+            arrayOfPokemon[`${currentAlly.id-1}`].classList.add("currentPokemon")
+        }, 75)
     })
  
     document.querySelector("#escapeBtn").addEventListener('click', () => {
@@ -469,6 +474,7 @@ function mainFunction() {
                 const newdiv = document.createElement("div");
 
                 newDet.textContent = poke.name;
+                newDet.classList.add(`${poke.is_fainted}_boxer`)
                 pokeList.appendChild(newDet);
 
                 newDet.appendChild(newDiv);
@@ -520,6 +526,8 @@ function mainFunction() {
             deActivePokemonSwapperBtn();
             if (!data.is_fainted) {
                 skillDeloader();
+                let arrayOfPokemon = document.querySelectorAll("#pokemonList > div")
+                arrayOfPokemon[`${currentAlly.id-1}`].classList.remove("currentPokemon")
                 currentAlly = data;
                 const allyPokemon = document.querySelector("#allyPokemon")
                 const allyHP = document.querySelector("#allyHP")
@@ -773,6 +781,7 @@ function mainFunction() {
         const newdiv = document.createElement("div")
 
         newDet.textContent = poke.name;
+        newDet.classList.add(`${poke.is_fainted}_boxer`)
         pokeList.appendChild(newDet);
 
         newDet.appendChild(newDiv);

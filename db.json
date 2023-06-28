@@ -183,6 +183,38 @@
       "id": 1,
       "name": "Pikachu",
       "type": "lightning",
+      "health": 13,
+      "max_health": 24,
+      "is_fainted": false,
+      "front_sprite": "./src/pokemon_images/pikachu_front.png",
+      "back_sprite": "./src/pokemon_images/pikachu_back.png",
+      "moves": [
+        {
+          "name": "thunder-punch",
+          "damage": 5,
+          "chance": 80
+        },
+        {
+          "name": "headbutt",
+          "damage": 4,
+          "chance": 95
+        },
+        {
+          "name": "thunderbolt",
+          "damage": 6,
+          "chance": 60
+        },
+        {
+          "name": "quick-attack",
+          "damage": 3,
+          "chance": 100
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Pikachu",
+      "type": "lightning",
       "health": 24,
       "max_health": 24,
       "is_fainted": false,
@@ -215,10 +247,10 @@
   "bagItems": [
     {
       "id": 1,
-      "pokeball": 4,
-      "masterball": 1,
-      "potion": 5,
-      "great_potion": 2
+      "pokeball": 9,
+      "masterball": 3,
+      "potion": 10,
+      "great_potion": 4
     }
   ]
 }

@@ -38,6 +38,8 @@ Hello! this is my phase-1-project for flatiron school's SWE program. I set out t
 30. Patched bug, pokemon list now updates properly when pokemon faints.
 31. Patched bug, pokemon swap now works with newly captured pokemons.
 32. Patched bug, item and pokemon list now reloads with initial data.
+33. Added features: an arrow in the pokemon list to indicate current active pokemon, red texts for fainted pokemons.
+
 
 # Deliverables to work on
 1. Add music for different screens.

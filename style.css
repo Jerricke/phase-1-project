@@ -167,6 +167,12 @@ div#bagGridBox > div > h1 {
     font-size: 1.5em;
     cursor: pointer;
     position: relative;
+    display: list-item;
+    list-style-type: none;
+}
+
+#pokemonList > div.currentPokemon {
+    list-style-type: ">"
 }
 
 #pokemonList > div > div > p {
@@ -177,6 +183,18 @@ div#bagGridBox > div > h1 {
     position: absolute;
     right: 1em;
     top: 0.25em;
+}
+
+#pokemonList > div > div > p > div {
+    position: relative;
+}
+#pokemonList > div > div > p > div > button {
+    position: absolute;
+    right: 1em;
+}
+
+.true_boxer {
+    color: red;
 }
 
 /* CombatScreen */
