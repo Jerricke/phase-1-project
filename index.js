@@ -400,6 +400,12 @@ function mainFunction() {
         }
     }
 
+    function eventHistoryClear() {
+        while (eventHistory.firstChild){
+            eventHistory.removeChild(eventHistory.firstChild);
+        }
+    }
+
     //when player clicks on a skill, run useSkill function
     function useSkill(e, data) {
         const skillUsed = e.target.textContent;
@@ -1018,6 +1024,9 @@ function mainFunction() {
         MMAudio.play();
         endingAudio.pause();
         
+        combatHistoryClear();
+        eventHistoryClear();
+
         gameOverScreen.style.display = "none";
         mainMenuScreen.style.display = "block";
 
