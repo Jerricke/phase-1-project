@@ -22,9 +22,12 @@ function mainFunction() {
     pokemonListLoader();
     bagScreenChange();
     swapperButtonUpdater();
+    
+    document.querySelector("#audio").addEventListener("click", () => {
+        MMAudio.currentTime = 13;
+        MMAudio.play();
+    })
 
-    MMAudio.currentTime = 13;
-    MMAudio.play();
 
     combatScreen.style.display = "none";
     bagScreen.style.display = "none";
@@ -42,7 +45,7 @@ function mainFunction() {
                 } else alert("Please start new game!")
             })
     })
-
+ 
     document.getElementById("resetGame").addEventListener("dblclick", () => {
         const length = document.querySelectorAll("#pokemonList > div").length;
         for (let i = 1; i <= length; i ++) {  //changed from 2->1
@@ -944,7 +947,12 @@ function mainFunction() {
             }
         })
 
+        combatAudio.pause();
+        gameAudio.currentTime = 0;
+        gameAudio.play();
         newPokemonAdder(currentOpponent);
+        pokemonListDeLoader();
+        pokemonListLoader();
     }
 
     function pokemonCaptureFail() {
