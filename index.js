@@ -44,6 +44,11 @@ function mainFunction() {
                     loadGameScreen();
                 } else alert("Please start new game!")
             })
+
+            pokemonListDeLoaderdeLoader();
+            pokemonListLoader();
+            bagScreenChange();
+            swapperButtonUpdater();
     })
  
     document.getElementById("resetGame").addEventListener("dblclick", () => {
@@ -51,6 +56,24 @@ function mainFunction() {
         for (let i = 1; i <= length; i ++) {  //changed from 2->1
             fetch(`http://localhost:3000/capturedPokemon/${i}`, {method: "DELETE"}) 
         }
+        fetch("http://localhost:3000/bagItems/1", {
+            method : "PATCH",
+            headers: {
+                "Content-Type" : "application/json"
+            },
+            body: JSON.stringify({
+                "pokeball": 4,
+                "masterball": 1,
+                "potion": 5,
+                "great_potion": 2
+            })
+        })
+
+        setTimeout( () => {
+            itemsCountLoader();
+            bagScreenChange();
+            eventHistoryClear();
+        }, 100)
         alert("Your game has been reset!")
     })
 
@@ -476,16 +499,16 @@ function mainFunction() {
                 allyDataPatcher({health: 0})
                 allyDataPatcher({is_fainted: true})
 
-                const newTag = document.getElementById(`${currentAlly.id}_hp`);
-                const newBtn = document.createElement("button");
-                const newdiv = document.createElement("div");
-                newBtn.textContent = "Swap";
-                newBtn.id = `${currentAlly.id}`;
-                newdiv.appendChild(newBtn)
-                newTag.appendChild(newdiv);
-                newBtn.addEventListener('click', (e) => {
-                    pokemonSwapper(e);
-                })
+                // const newTag = document.getElementById(`${currentAlly.id}_hp`);
+                // const newBtn = document.createElement("button");
+                // const newdiv = document.createElement("div");
+                // newBtn.textContent = "Swap";
+                // newBtn.id = `${currentAlly.id}`;
+                // newdiv.appendChild(newBtn)
+                // newTag.appendChild(newdiv);
+                // newBtn.addEventListener('click', (e) => {
+                //     pokemonSwapper(e);
+                // })
 
                 let available = false;
                 setTimeout(() => {
@@ -902,6 +925,8 @@ function mainFunction() {
         setTimeout(() => {
             combatLeave(`Successfully captured the ${poke.name}!`);
             opponentPokemon.style.animation = "none";
+            pokemonListDeLoader();
+            pokemonListLoader();
         }, 2000)
 
         //update pokemonlist
