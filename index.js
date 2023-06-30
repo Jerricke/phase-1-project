@@ -134,7 +134,8 @@ function mainFunction() {
  
     document.querySelector("#escapeBtn").addEventListener('click', () => {
          combatLeave("You escaped the Pokemon!");
-
+         pokemonListDeLoaderdeLoader();
+         pokemonListLoader();
          combatAudio.pause();
          gameAudio.currentTime = 0;
          gameAudio.play();
@@ -599,16 +600,19 @@ function mainFunction() {
                     combatStatus = false; 
                     isPlayStatus = true;
 
-                    victoryAudio.pause();
+                    combatAudio.pause();
                     gameAudio.currentTime = 0;
                     gameAudio.play();
                 }, 3000)
                 eventHistoryLogger(`You defeated the enemy ${currentOpponent.name}`);
                 combatEventLogger(`${currentOpponent.name} has fainted`);
 
-                victoryAudio.currentTime = 1;
-                victoryAudio.play();
-                combatAudio.pause();
+                pokemonListDeLoaderdeLoader();
+                pokemonListLoader();
+
+                // victoryAudio.currentTime = 1;
+                // victoryAudio.play();
+                // combatAudio.pause();
             }
         }   else return
     }
@@ -1054,8 +1058,8 @@ function mainFunction() {
         }, 500)
 
         MMAudio.currentTime = 13;
-        MMAudio.play();
         endingAudio.pause();
+        MMAudio.play();
         
         combatHistoryClear();
         eventHistoryClear();
